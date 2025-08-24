@@ -1,0 +1,4242 @@
+fileFormatVersion: 2
+guid: 812ff516b7692284981ae863cdf73801
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2828077047651648745
+    second: Smoke_0
+  - first:
+      213: 8726148449916930910
+    second: Smoke_1
+  - first:
+      213: -8044494511525273312
+    second: Smoke_2
+  - first:
+      213: 4012990250835332762
+    second: Smoke_3
+  - first:
+      213: 7674693441881433481
+    second: Smoke_4
+  - first:
+      213: -4176298113601619864
+    second: Smoke_5
+  - first:
+      213: -7707245647601438625
+    second: Smoke_6
+  - first:
+      213: -4073179049984778777
+    second: Smoke_7
+  - first:
+      213: -4653406051338019027
+    second: Smoke_8
+  - first:
+      213: 5533179496836470288
+    second: Smoke_9
+  - first:
+      213: -989134415111674395
+    second: Smoke_10
+  - first:
+      213: 3291914812987065182
+    second: Smoke_11
+  - first:
+      213: -3644940872334523152
+    second: Smoke_12
+  - first:
+      213: -3155058853054514227
+    second: Smoke_13
+  - first:
+      213: 4845831617191762501
+    second: Smoke_14
+  - first:
+      213: 7670101274396148412
+    second: Smoke_15
+  - first:
+      213: 7744114913408827971
+    second: Smoke_16
+  - first:
+      213: 5304412894329666404
+    second: Smoke_17
+  - first:
+      213: 1383997892178303698
+    second: Smoke_18
+  - first:
+      213: -3918070614324973492
+    second: Smoke_19
+  - first:
+      213: -3810084775486382840
+    second: Smoke_20
+  - first:
+      213: -8863649533586187953
+    second: Smoke_21
+  - first:
+      213: 4705083912650227132
+    second: Smoke_22
+  - first:
+      213: 7101278156983015490
+    second: Smoke_23
+  - first:
+      213: 6908994287709100554
+    second: Smoke_24
+  - first:
+      213: -2324691174676955833
+    second: Smoke_25
+  - first:
+      213: 5279049922332004655
+    second: Smoke_26
+  - first:
+      213: -6609100906405065491
+    second: Smoke_27
+  - first:
+      213: 5929195720467319475
+    second: Smoke_28
+  - first:
+      213: -8768479501448480288
+    second: Smoke_29
+  - first:
+      213: 7468655911165676131
+    second: Smoke_30
+  - first:
+      213: -8030458083417864876
+    second: Smoke_31
+  - first:
+      213: -8377615684083439254
+    second: Smoke_32
+  - first:
+      213: -3175012787262864827
+    second: Smoke_33
+  - first:
+      213: 3968171630643270128
+    second: Smoke_34
+  - first:
+      213: 5098422688997760548
+    second: Smoke_35
+  - first:
+      213: 1250376368589706309
+    second: Smoke_36
+  - first:
+      213: 7231061365531395737
+    second: Smoke_37
+  - first:
+      213: -1767965475672619506
+    second: Smoke_38
+  - first:
+      213: 2656758002276756044
+    second: Smoke_39
+  - first:
+      213: 5238977678495612565
+    second: Smoke_40
+  - first:
+      213: -8085299572306231171
+    second: Smoke_41
+  - first:
+      213: -4836007956851269220
+    second: Smoke_42
+  - first:
+      213: -8632300728645556905
+    second: Smoke_43
+  - first:
+      213: -7601939296221125179
+    second: Smoke_44
+  - first:
+      213: -2722936368193902587
+    second: Smoke_45
+  - first:
+      213: 5080756132467807463
+    second: Smoke_46
+  - first:
+      213: 7884227830804600740
+    second: Smoke_47
+  - first:
+      213: -7471814290348461928
+    second: Smoke_48
+  - first:
+      213: -7496845249193300688
+    second: Smoke_49
+  - first:
+      213: -392699018393608201
+    second: Smoke_50
+  - first:
+      213: -4105313541984481621
+    second: Smoke_51
+  - first:
+      213: -7526726616729657360
+    second: Smoke_52
+  - first:
+      213: 7357026340250039234
+    second: Smoke_53
+  - first:
+      213: 8052401722487902391
+    second: Smoke_54
+  - first:
+      213: -5303205446134086582
+    second: Smoke_55
+  - first:
+      213: 6889714120741983015
+    second: Smoke_56
+  - first:
+      213: 850478943186844624
+    second: Smoke_57
+  - first:
+      213: 6174218517577869626
+    second: Smoke_58
+  - first:
+      213: -2402632475526329870
+    second: Smoke_59
+  - first:
+      213: -8025613347129195418
+    second: Smoke_60
+  - first:
+      213: 679464964370918463
+    second: Smoke_61
+  - first:
+      213: 3948695473998874783
+    second: Smoke_62
+  - first:
+      213: -619852695363791832
+    second: Smoke_63
+  - first:
+      213: 1336633080546928899
+    second: Smoke_64
+  - first:
+      213: -7566683024984755800
+    second: Smoke_65
+  - first:
+      213: 5798961331397854819
+    second: Smoke_66
+  - first:
+      213: -2005816611132649225
+    second: Smoke_67
+  - first:
+      213: 5983206565264555292
+    second: Smoke_68
+  - first:
+      213: -3980701825080146808
+    second: Smoke_69
+  - first:
+      213: 1500896529840190020
+    second: Smoke_70
+  - first:
+      213: -3203413931664377607
+    second: Smoke_71
+  - first:
+      213: -6773614559054125922
+    second: Smoke_72
+  - first:
+      213: 5922891952441061536
+    second: Smoke_73
+  - first:
+      213: -5882584411308289226
+    second: Smoke_74
+  - first:
+      213: -6456494066325834340
+    second: Smoke_75
+  - first:
+      213: -2132812770678087107
+    second: Smoke_76
+  - first:
+      213: -5579541837678156683
+    second: Smoke_77
+  - first:
+      213: -7676391399546276278
+    second: Smoke_78
+  - first:
+      213: 4076906517348559416
+    second: Smoke_79
+  - first:
+      213: -730937740196653933
+    second: Smoke_80
+  - first:
+      213: -7763278231457757822
+    second: Smoke_81
+  - first:
+      213: 556188415772936864
+    second: Smoke_82
+  - first:
+      213: -5982463423714981863
+    second: Smoke_83
+  - first:
+      213: -2282827248232778102
+    second: Smoke_84
+  - first:
+      213: -5147254539673902997
+    second: Smoke_85
+  - first:
+      213: -2997252386444554772
+    second: Smoke_86
+  - first:
+      213: -1088299308338020285
+    second: Smoke_87
+  - first:
+      213: -5531696495758977100
+    second: Smoke_88
+  - first:
+      213: -1066309103402057516
+    second: Smoke_89
+  - first:
+      213: 6863427547824509070
+    second: Smoke_90
+  - first:
+      213: -3622204214698005070
+    second: Smoke_91
+  - first:
+      213: -5504918121510532032
+    second: Smoke_92
+  - first:
+      213: -2018309916985407525
+    second: Smoke_93
+  - first:
+      213: 2496552670623948692
+    second: Smoke_94
+  - first:
+      213: 4659531721336917623
+    second: Smoke_95
+  - first:
+      213: -5711575448357081267
+    second: Smoke_96
+  - first:
+      213: 4153468554611959858
+    second: Smoke_97
+  - first:
+      213: 4254216296200765289
+    second: Smoke_98
+  - first:
+      213: -7080255487494953331
+    second: Smoke_99
+  - first:
+      213: 4503071004713688003
+    second: Smoke_100
+  - first:
+      213: 4089349638823219663
+    second: Smoke_101
+  - first:
+      213: 2331555798967520951
+    second: Smoke_102
+  - first:
+      213: -8257525585041488860
+    second: Smoke_103
+  - first:
+      213: -4452801688855068561
+    second: Smoke_104
+  - first:
+      213: 1560998592000968416
+    second: Smoke_105
+  - first:
+      213: 7378777981403708053
+    second: Smoke_106
+  - first:
+      213: 163708871953050935
+    second: Smoke_107
+  - first:
+      213: -5845488678044420342
+    second: Smoke_108
+  - first:
+      213: -5751422956578820866
+    second: Smoke_109
+  - first:
+      213: 8481809628017743008
+    second: Smoke_110
+  - first:
+      213: 5926475825406918548
+    second: Smoke_111
+  - first:
+      213: -6863172631115412321
+    second: Smoke_112
+  - first:
+      213: 1682547745480351400
+    second: Smoke_113
+  - first:
+      213: 6368112923868157318
+    second: Smoke_114
+  - first:
+      213: -4984546760298329655
+    second: Smoke_115
+  - first:
+      213: -1713551997375841309
+    second: Smoke_116
+  - first:
+      213: -2748554754086880886
+    second: Smoke_117
+  - first:
+      213: 183325296022540335
+    second: Smoke_118
+  - first:
+      213: -1895920155182313143
+    second: Smoke_119
+  - first:
+      213: 1965072894963151434
+    second: Smoke_120
+  - first:
+      213: -5074980300393383564
+    second: Smoke_121
+  - first:
+      213: -3336857019983057259
+    second: Smoke_122
+  - first:
+      213: 6062568225589761649
+    second: Smoke_123
+  - first:
+      213: -68097765368917297
+    second: Smoke_124
+  - first:
+      213: 4783663987453182712
+    second: Smoke_125
+  - first:
+      213: 990326044175230779
+    second: Smoke_126
+  - first:
+      213: 4983973524901746934
+    second: Smoke_127
+  - first:
+      213: -5607961070244446852
+    second: Smoke_128
+  - first:
+      213: -3905039866204904367
+    second: Smoke_129
+  - first:
+      213: 1867354364619390836
+    second: Smoke_130
+  - first:
+      213: 8406538477078673414
+    second: Smoke_131
+  - first:
+      213: -688499948086951692
+    second: Smoke_132
+  - first:
+      213: 2942810105323148394
+    second: Smoke_133
+  - first:
+      213: 7787184844140278002
+    second: Smoke_134
+  - first:
+      213: 6950816941328683819
+    second: Smoke_135
+  - first:
+      213: -5887048979615163663
+    second: Smoke_136
+  - first:
+      213: -3506367784875457384
+    second: Smoke_137
+  - first:
+      213: -5555597569533566130
+    second: Smoke_138
+  - first:
+      213: 7247335177295446830
+    second: Smoke_139
+  - first:
+      213: -7639084345650679842
+    second: Smoke_140
+  - first:
+      213: 189681754499163044
+    second: Smoke_141
+  - first:
+      213: -253171912847606979
+    second: Smoke_142
+  - first:
+      213: 453460753589174585
+    second: Smoke_143
+  - first:
+      213: -4571052736493087336
+    second: Smoke_144
+  - first:
+      213: -484578772813900613
+    second: Smoke_145
+  - first:
+      213: 410005901900784847
+    second: Smoke_146
+  - first:
+      213: -4677569606824946919
+    second: Smoke_147
+  - first:
+      213: 740687283808644344
+    second: Smoke_148
+  - first:
+      213: 594030256749929841
+    second: Smoke_149
+  - first:
+      213: 1498424911422888812
+    second: Smoke_150
+  - first:
+      213: -2247619105539540543
+    second: Smoke_151
+  - first:
+      213: 6268285003578672773
+    second: Smoke_152
+  - first:
+      213: -8509043476625064827
+    second: Smoke_153
+  - first:
+      213: -470708719412791448
+    second: Smoke_154
+  - first:
+      213: 2105651792267134164
+    second: Smoke_155
+  - first:
+      213: -5858665598561672628
+    second: Smoke_156
+  - first:
+      213: 1557153350958996036
+    second: Smoke_157
+  - first:
+      213: -7150104376603152165
+    second: Smoke_158
+  - first:
+      213: -2303431841545468798
+    second: Smoke_159
+  - first:
+      213: 3825771027398784508
+    second: Smoke_160
+  - first:
+      213: 448271231926368540
+    second: Smoke_161
+  - first:
+      213: 1160955990142584573
+    second: Smoke_162
+  - first:
+      213: 7778826625327931808
+    second: Smoke_163
+  - first:
+      213: -6389215308247811633
+    second: Smoke_164
+  - first:
+      213: -5821672886339758588
+    second: Smoke_165
+  - first:
+      213: 1226350147173766964
+    second: Smoke_166
+  - first:
+      213: -4913664466100592583
+    second: Smoke_167
+  - first:
+      213: -8001040340427428194
+    second: Smoke_168
+  - first:
+      213: 5513180358604977404
+    second: Smoke_169
+  - first:
+      213: -5850969722082970483
+    second: Smoke_170
+  - first:
+      213: -3970494579687664056
+    second: Smoke_171
+  - first:
+      213: 1696769723239647866
+    second: Smoke_172
+  - first:
+      213: 6033765622073875130
+    second: Smoke_173
+  - first:
+      213: 2814583790751521444
+    second: Smoke_174
+  - first:
+      213: 6264806864546206480
+    second: Smoke_175
+  - first:
+      213: -6672337884425743645
+    second: Smoke_176
+  - first:
+      213: 5546554052624365874
+    second: Smoke_177
+  - first:
+      213: 4360594321218697887
+    second: Smoke_178
+  - first:
+      213: -621890704655770326
+    second: Smoke_179
+  - first:
+      213: -5268973632249683360
+    second: Smoke_180
+  - first:
+      213: 234095480733869583
+    second: Smoke_181
+  - first:
+      213: 200198472839110789
+    second: Smoke_182
+  - first:
+      213: -8961959724809320649
+    second: Smoke_183
+  - first:
+      213: 6355671838917765916
+    second: Smoke_184
+  - first:
+      213: 3410699906697232508
+    second: Smoke_185
+  - first:
+      213: 3824592765648129479
+    second: Smoke_186
+  - first:
+      213: 1834646884341848326
+    second: Smoke_187
+  - first:
+      213: -2302481708359166307
+    second: Smoke_188
+  - first:
+      213: -8098282012705869264
+    second: Smoke_189
+  - first:
+      213: 7779364523538312148
+    second: Smoke_190
+  - first:
+      213: 1042345654226349921
+    second: Smoke_191
+  - first:
+      213: 8742125465448693501
+    second: Smoke_192
+  - first:
+      213: 3514703042708234087
+    second: Smoke_193
+  - first:
+      213: -6513313464256516186
+    second: Smoke_194
+  - first:
+      213: 3924369493152596939
+    second: Smoke_195
+  - first:
+      213: 5636233179836290253
+    second: Smoke_196
+  - first:
+      213: 1753899191005232067
+    second: Smoke_197
+  - first:
+      213: 578004026360333646
+    second: Smoke_198
+  - first:
+      213: 6492854750559378913
+    second: Smoke_199
+  - first:
+      213: 1608223361831515101
+    second: Smoke_200
+  - first:
+      213: 508700075652606766
+    second: Smoke_201
+  - first:
+      213: -1789447063064428796
+    second: Smoke_202
+  - first:
+      213: 7986939303809188684
+    second: Smoke_203
+  - first:
+      213: 2157767458569010973
+    second: Smoke_204
+  - first:
+      213: 2598651506121028778
+    second: Smoke_205
+  - first:
+      213: 467960586876559317
+    second: Smoke_206
+  - first:
+      213: -59695443783168097
+    second: Smoke_207
+  - first:
+      213: -2744525432274603033
+    second: Smoke_208
+  - first:
+      213: -6720834759919377183
+    second: Smoke_209
+  - first:
+      213: 807303565522388219
+    second: Smoke_210
+  - first:
+      213: 6120527456791858703
+    second: Smoke_211
+  - first:
+      213: 7025278502809878438
+    second: Smoke_212
+  - first:
+      213: 977126034346129526
+    second: Smoke_213
+  - first:
+      213: 394055152877339589
+    second: Smoke_214
+  - first:
+      213: 7443170998041607065
+    second: Smoke_215
+  - first:
+      213: -8678378998162872193
+    second: Smoke_216
+  - first:
+      213: 6324326708637635045
+    second: Smoke_217
+  - first:
+      213: 8000307112840348551
+    second: Smoke_218
+  - first:
+      213: -6291734391052084213
+    second: Smoke_219
+  - first:
+      213: 1174920587049805269
+    second: Smoke_220
+  - first:
+      213: -6536905176415124016
+    second: Smoke_221
+  - first:
+      213: 4574128445181317580
+    second: Smoke_222
+  - first:
+      213: 6154417344284426555
+    second: Smoke_223
+  - first:
+      213: -2421623128920811664
+    second: Smoke_224
+  - first:
+      213: 1152956518688972431
+    second: Smoke_225
+  - first:
+      213: -2203602915624658537
+    second: Smoke_226
+  - first:
+      213: -875295393619604670
+    second: Smoke_227
+  - first:
+      213: -4349596390515724808
+    second: Smoke_228
+  - first:
+      213: 4991024459789303019
+    second: Smoke_229
+  - first:
+      213: 3938486188584073361
+    second: Smoke_230
+  - first:
+      213: -6332077106885333425
+    second: Smoke_231
+  - first:
+      213: 4925392928434950745
+    second: Smoke_232
+  - first:
+      213: 2720253304223376772
+    second: Smoke_233
+  - first:
+      213: -7864074579241950966
+    second: Smoke_234
+  - first:
+      213: -1320396194126733488
+    second: Smoke_235
+  - first:
+      213: 7525590831667961928
+    second: Smoke_236
+  - first:
+      213: -2872286421875320435
+    second: Smoke_237
+  - first:
+      213: 7893946973923921603
+    second: Smoke_238
+  - first:
+      213: 285240216901896474
+    second: Smoke_239
+  - first:
+      213: 6912944396619224659
+    second: Smoke_240
+  - first:
+      213: 56341095675753924
+    second: Smoke_241
+  - first:
+      213: -5742370905925241968
+    second: Smoke_242
+  - first:
+      213: -1125970230002844124
+    second: Smoke_243
+  - first:
+      213: -3253952043277788984
+    second: Smoke_244
+  - first:
+      213: -3573982395896285581
+    second: Smoke_245
+  - first:
+      213: -2885306006087399420
+    second: Smoke_246
+  - first:
+      213: -6940106516314101646
+    second: Smoke_247
+  - first:
+      213: 6505475838234416299
+    second: Smoke_248
+  - first:
+      213: 4270081699578019584
+    second: Smoke_249
+  - first:
+      213: 8653453528580714418
+    second: Smoke_250
+  - first:
+      213: 2665795685301470577
+    second: Smoke_251
+  - first:
+      213: -8154519828236258106
+    second: Smoke_252
+  - first:
+      213: -3219518733258272912
+    second: Smoke_253
+  - first:
+      213: 862870753692759516
+    second: Smoke_254
+  - first:
+      213: -4273591091700598389
+    second: Smoke_255
+  - first:
+      213: -4553685005132219244
+    second: Smoke_256
+  - first:
+      213: 9199185342257946478
+    second: Smoke_257
+  - first:
+      213: 6713829616807462421
+    second: Smoke_258
+  - first:
+      213: 4555252398805840872
+    second: Smoke_259
+  - first:
+      213: -667101121630321586
+    second: Smoke_260
+  - first:
+      213: -6612571065524797709
+    second: Smoke_261
+  - first:
+      213: -8641548016642252895
+    second: Smoke_262
+  - first:
+      213: 5966239449759275197
+    second: Smoke_263
+  - first:
+      213: 8952586001847522731
+    second: Smoke_264
+  - first:
+      213: -7701375557126688861
+    second: Smoke_265
+  - first:
+      213: 633964282524551018
+    second: Smoke_266
+  - first:
+      213: -6319958284483294979
+    second: Smoke_267
+  - first:
+      213: 5402053564378960709
+    second: Smoke_268
+  - first:
+      213: 5761090103324740997
+    second: Smoke_269
+  - first:
+      213: 7054837223411396106
+    second: Smoke_270
+  - first:
+      213: 6456179705302749657
+    second: Smoke_271
+  - first:
+      213: -5316588004631468750
+    second: Smoke_272
+  - first:
+      213: 624457547997637242
+    second: Smoke_273
+  - first:
+      213: -7606778339388810532
+    second: Smoke_274
+  - first:
+      213: 6668910266791062276
+    second: Smoke_275
+  - first:
+      213: 3052070899422167831
+    second: Smoke_276
+  - first:
+      213: -1015412170273913058
+    second: Smoke_277
+  - first:
+      213: -775737833009939581
+    second: Smoke_278
+  - first:
+      213: 122957242626844553
+    second: Smoke_279
+  - first:
+      213: 8451445729220788719
+    second: Smoke_280
+  - first:
+      213: -4355301662963092685
+    second: Smoke_281
+  - first:
+      213: -2587636926661068464
+    second: Smoke_282
+  - first:
+      213: -5565366433942417960
+    second: Smoke_283
+  - first:
+      213: 1853500683286906944
+    second: Smoke_284
+  - first:
+      213: -46795466109137386
+    second: Smoke_285
+  - first:
+      213: 5132565615077344368
+    second: Smoke_286
+  - first:
+      213: -3567951513854317266
+    second: Smoke_287
+  - first:
+      213: -7579082471073579147
+    second: Smoke_288
+  - first:
+      213: -529223946524428491
+    second: Smoke_289
+  - first:
+      213: -2014297542070284681
+    second: Smoke_290
+  - first:
+      213: 5111132612266232171
+    second: Smoke_291
+  - first:
+      213: -4647528570613801731
+    second: Smoke_292
+  - first:
+      213: 7870549416611248197
+    second: Smoke_293
+  - first:
+      213: -8060461466289932169
+    second: Smoke_294
+  - first:
+      213: -3420830930927370128
+    second: Smoke_295
+  - first:
+      213: 5080842764456072467
+    second: Smoke_296
+  - first:
+      213: -3358971567338007574
+    second: Smoke_297
+  - first:
+      213: 5234751701330655262
+    second: Smoke_298
+  - first:
+      213: -3276940979054821713
+    second: Smoke_299
+  - first:
+      213: -3507559786224482676
+    second: Smoke_300
+  - first:
+      213: -2817618310869046160
+    second: Smoke_301
+  - first:
+      213: 1048115535458707377
+    second: Smoke_302
+  - first:
+      213: -6715103341878785016
+    second: Smoke_303
+  - first:
+      213: -6136814949936751189
+    second: Smoke_304
+  - first:
+      213: -3681016658880379132
+    second: Smoke_305
+  - first:
+      213: -602365508515619443
+    second: Smoke_306
+  - first:
+      213: 1019919146876105624
+    second: Smoke_307
+  - first:
+      213: 4981412597088201768
+    second: Smoke_308
+  - first:
+      213: 7541291948849173749
+    second: Smoke_309
+  - first:
+      213: 5128218566161187667
+    second: Smoke_310
+  - first:
+      213: 7575321450652040382
+    second: Smoke_311
+  - first:
+      213: -452832222057446069
+    second: Smoke_312
+  - first:
+      213: -8452574553116387175
+    second: Smoke_313
+  - first:
+      213: 7884208443262102807
+    second: Smoke_314
+  - first:
+      213: 4513476419289375538
+    second: Smoke_315
+  - first:
+      213: 1859517929994068613
+    second: Smoke_316
+  - first:
+      213: -8036312244289632285
+    second: Smoke_317
+  - first:
+      213: -877021020211848768
+    second: Smoke_318
+  - first:
+      213: 111998841319031762
+    second: Smoke_319
+  - first:
+      213: -972145727693228865
+    second: Smoke_320
+  - first:
+      213: 5042000918617112028
+    second: Smoke_321
+  - first:
+      213: 925371637777740772
+    second: Smoke_322
+  - first:
+      213: 5417150768587446337
+    second: Smoke_323
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Smoke_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e446be47195f3720800000000000000
+      internalID: 2828077047651648745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5bcf9638c1891970800000000000000
+      internalID: 8726148449916930910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 021e4f20dd63c5090800000000000000
+      internalID: -8044494511525273312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9e45241f5101b730800000000000000
+      internalID: 4012990250835332762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 985ec5be50df18a60800000000000000
+      internalID: 7674693441881433481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86834ae1efeca06c0800000000000000
+      internalID: -4176298113601619864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f507a021bec5a0590800000000000000
+      internalID: -7707245647601438625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ed18131c392977c0800000000000000
+      internalID: -4073179049984778777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2f1852e9d7cb6fb0800000000000000
+      internalID: -4653406051338019027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 896
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0169963bf6dc9cc40800000000000000
+      internalID: 5533179496836470288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e5a7287d73e542f0800000000000000
+      internalID: -989134415111674395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_11
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e53c0f2c41b3fad20800000000000000
+      internalID: 3291914812987065182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_12
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f4c23d96919a6dc0800000000000000
+      internalID: -3644940872334523152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_13
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcbfb3a70baf634d0800000000000000
+      internalID: -3155058853054514227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_14
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54a52187e2adf3340800000000000000
+      internalID: 4845831617191762501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_15
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb247ab987ca17a60800000000000000
+      internalID: 7670101274396148412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_16
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 342c981db7f987b60800000000000000
+      internalID: 7744114913408827971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_17
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46b75846c6f0d9940800000000000000
+      internalID: 5304412894329666404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_18
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2da5d2d00c2f43310800000000000000
+      internalID: 1383997892178303698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_19
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 832
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c40734cf88730a9c0800000000000000
+      internalID: -3918070614324973492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80d9209551cdf1bc0800000000000000
+      internalID: -3810084775486382840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_21
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f49d909f5bdfdf480800000000000000
+      internalID: -8863649533586187953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_22
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbdfbe3d3e0db4140800000000000000
+      internalID: 4705083912650227132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_23
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 248963e0cdecc8260800000000000000
+      internalID: 7101278156983015490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_24
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0a9a1203bda1ef50800000000000000
+      internalID: 6908994287709100554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_25
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74df4e081b90dbfd0800000000000000
+      internalID: -2324691174676955833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_26
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f21172c4fe3f24940800000000000000
+      internalID: 5279049922332004655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_27
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dec830dfdb1c744a0800000000000000
+      internalID: -6609100906405065491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_28
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ba8832f71cb84250800000000000000
+      internalID: 5929195720467319475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_29
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 768
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e97edfc95a105680800000000000000
+      internalID: -8768479501448480288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36ac6a60bfef5a760800000000000000
+      internalID: 7468655911165676131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_31
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 455c63a9be41e8090800000000000000
+      internalID: -8030458083417864876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_32
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a69277dfbeabcbb80800000000000000
+      internalID: -8377615684083439254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_33
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 542cfd121b610f3d0800000000000000
+      internalID: -3175012787262864827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_34
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f15644e217c11730800000000000000
+      internalID: 3968171630643270128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_35
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42ed08c4c6c31c640800000000000000
+      internalID: 5098422688997760548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_36
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5441555beaa3a5110800000000000000
+      internalID: 1250376368589706309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_37
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 996cc890004e95460800000000000000
+      internalID: 7231061365531395737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_38
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 704
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e06016754cce677e0800000000000000
+      internalID: -1767965475672619506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_39
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4ae1e3b353bed420800000000000000
+      internalID: 2656758002276756044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_40
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59e7ee8f07694b840800000000000000
+      internalID: 5238977678495612565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_41
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d70c11270ee3bcf80800000000000000
+      internalID: -8085299572306231171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_42
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c91eae0b26c03ecb0800000000000000
+      internalID: -4836007956851269220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_43
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7556cb22938e33880800000000000000
+      internalID: -8632300728645556905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_44
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c528a4ac7c708690800000000000000
+      internalID: -7601939296221125179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_45
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5086fc3cccf263ad0800000000000000
+      internalID: -2722936368193902587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_46
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e4912298c8728640800000000000000
+      internalID: 5080756132467807463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_47
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 640
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a75b5f80776a6d60800000000000000
+      internalID: 7884227830804600740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 890b7148d78ce4890800000000000000
+      internalID: -7471814290348461928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_49
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03d22c147fad5f790800000000000000
+      internalID: -7496845249193300688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_50
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ff1109c25adc8af0800000000000000
+      internalID: -392699018393608201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_51
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bae0a6e951ff607c0800000000000000
+      internalID: -4105313541984481621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_52
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ffd9583502bb8790800000000000000
+      internalID: -7526726616729657360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_53
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c3bbcd2a78691660800000000000000
+      internalID: 7357026340250039234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_54
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b092a104b0efbf60800000000000000
+      internalID: 8052401722487902391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_55
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a44c24c8eba3766b0800000000000000
+      internalID: -5303205446134086582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_56
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 576
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72391d25d7e2d9f50800000000000000
+      internalID: 6889714120741983015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_57
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dbf991c7128dcb00800000000000000
+      internalID: 850478943186844624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_58
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a392ed1870b3fa550800000000000000
+      internalID: 6174218517577869626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_59
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f98f624e7228aed0800000000000000
+      internalID: -2402632475526329870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_60
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6640bbbae2b4f9090800000000000000
+      internalID: -8025613347129195418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_61
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3ce6aef8c1fd6900800000000000000
+      internalID: 679464964370918463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_62
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9845edcc959cc630800000000000000
+      internalID: 3948695473998874783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_63
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 824d5c7f147d567f0800000000000000
+      internalID: -619852695363791832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_64
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 309290974bcac8210800000000000000
+      internalID: 1336633080546928899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_65
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a13ec7f0edbdf690800000000000000
+      internalID: -7566683024984755800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36602305b9c0a7050800000000000000
+      internalID: 5798961331397854819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_67
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f05cd06b68e924e0800000000000000
+      internalID: -2005816611132649225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_68
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1df064bbae980350800000000000000
+      internalID: 5983206565264555292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_69
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 884495fd7c4b1c8c0800000000000000
+      internalID: -3980701825080146808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_70
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 442bdb9117144d410800000000000000
+      internalID: 1500896529840190020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_71
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f87b9660003b83d0800000000000000
+      internalID: -3203413931664377607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_72
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e942a2a52794ff1a0800000000000000
+      internalID: -6773614559054125922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_73
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a0f44499d6523250800000000000000
+      internalID: 5922891952441061536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_74
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63318ba25acdc5ea0800000000000000
+      internalID: -5882584411308289226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_75
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c953b3acadce566a0800000000000000
+      internalID: -6456494066325834340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_76
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d32e05fc51ab662e0800000000000000
+      internalID: -2132812770678087107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_77
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57463c3a24c7192b0800000000000000
+      internalID: -5579541837678156683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_78
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a463e2181baf77590800000000000000
+      internalID: -7676391399546276278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_79
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83a290d80e4149830800000000000000
+      internalID: 4076906517348559416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_80
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 394d6aa7fff2bd5f0800000000000000
+      internalID: -730937740196653933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_81
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2850071849b434490800000000000000
+      internalID: -7763278231457757822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_82
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0aa4556da6af7b700800000000000000
+      internalID: 556188415772936864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_83
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 384
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91883bb66350afca0800000000000000
+      internalID: -5982463423714981863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_84
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a86b08176b4c150e0800000000000000
+      internalID: -2282827248232778102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_85
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b60683a74474198b0800000000000000
+      internalID: -5147254539673902997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_86
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cedc7cba5de9766d0800000000000000
+      internalID: -2997252386444554772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_87
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 340853d8b8595e0f0800000000000000
+      internalID: -1088299308338020285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_88
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b7530568577b33b0800000000000000
+      internalID: -5531696495758977100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_89
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d084fe1585b331f0800000000000000
+      internalID: -1066309103402057516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_90
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e80d5b1adfacf3f50800000000000000
+      internalID: 6863427547824509070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_91
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bda00f35785bbdc0800000000000000
+      internalID: -3622204214698005070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_92
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 320
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c01c1822a9a93b0800000000000000
+      internalID: -5504918121510532032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_93
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd7cf6fe2d58df3e0800000000000000
+      internalID: -2018309916985407525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_94
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49fd7973d6985a220800000000000000
+      internalID: 2496552670623948692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_95
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77e83fdc96bf9a040800000000000000
+      internalID: 4659531721336917623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_96
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4f65d414686cb0b0800000000000000
+      internalID: -5711575448357081267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_97
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 238a667f4a514a930800000000000000
+      internalID: 4153468554611959858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_98
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96f79bc7e230a0b30800000000000000
+      internalID: 4254216296200765289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_99
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d866adc9521edbd90800000000000000
+      internalID: -7080255487494953331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_100
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cb1252783f1e7e30800000000000000
+      internalID: 4503071004713688003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_101
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc11e6884d940c830800000000000000
+      internalID: 4089349638823219663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_102
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7be067365a95b5020800000000000000
+      internalID: 2331555798967520951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_103
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42407eb0b30676d80800000000000000
+      internalID: -8257525585041488860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_104
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f60c888b4787432c0800000000000000
+      internalID: -4452801688855068561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_105
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e64a1be2f7c9a510800000000000000
+      internalID: 1560998592000968416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_106
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59aba0aca7fa66660800000000000000
+      internalID: 7378777981403708053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_107
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73d67570a5c954200800000000000000
+      internalID: 163708871953050935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_108
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a07389e9407a0eea0800000000000000
+      internalID: -5845488678044420342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_109
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efca7181b47de20b0800000000000000
+      internalID: -5751422956578820866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_110
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a45c7a0be075b570800000000000000
+      internalID: 8481809628017743008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_111
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49fb1570d521f3250800000000000000
+      internalID: 5926475825406918548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_112
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9cce2acadc11c0a0800000000000000
+      internalID: -6863172631115412321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_113
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ae9dfe824c995710800000000000000
+      internalID: 1682547745480351400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_114
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6855cbce6f4106850800000000000000
+      internalID: 6368112923868157318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_115
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c9081a712553dab0800000000000000
+      internalID: -4984546760298329655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_116
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3eb7044898d3838e0800000000000000
+      internalID: -1713551997375841309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_117
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a89b0fc730c2bd9d0800000000000000
+      internalID: -2748554754086880886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_118
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2054cba26d4b8200800000000000000
+      internalID: 183325296022540335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_119
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 941dad3f9a650b5e0800000000000000
+      internalID: -1895920155182313143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_120
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a42f606f267554b10800000000000000
+      internalID: 1965072894963151434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_121
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47972f02e4c0299b0800000000000000
+      internalID: -5074980300393383564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_122
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59e24a1483a11b1d0800000000000000
+      internalID: -3336857019983057259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_123
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17619d82ea1922450800000000000000
+      internalID: 6062568225589761649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_124
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc2103571711e0ff0800000000000000
+      internalID: -68097765368917297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_125
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f2c9f83d0df26240800000000000000
+      internalID: 4783663987453182712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_126
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b37e1ea4a485ebd00800000000000000
+      internalID: 990326044175230779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_127
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f858b1c381aa2540800000000000000
+      internalID: 4983973524901746934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_128
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7d3cdd6e158c22b0800000000000000
+      internalID: -5607961070244446852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_129
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1542e157ee28ec9c0800000000000000
+      internalID: -3905039866204904367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_130
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47ff9e4a6ec2ae910800000000000000
+      internalID: 1867354364619390836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_131
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6087de484360aa470800000000000000
+      internalID: 8406538477078673414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_132
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f0076ee1f4f176f0800000000000000
+      internalID: -688499948086951692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_133
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a645739f236f6d820800000000000000
+      internalID: 2942810105323148394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_134
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f079438b53a11c60800000000000000
+      internalID: 7787184844140278002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_135
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b23d9ae5e23467060800000000000000
+      internalID: 6950816941328683819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smoke_136
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fa56bad4200d4ea0800000000000000
+      internalID: -5887048979615163663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 62854298d6ddfa04d98253d2a2fd0f74
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":11.0,"y":15.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Smoke_0: 2828077047651648745
+      Smoke_1: 8726148449916930910
+      Smoke_10: -989134415111674395
+      Smoke_100: 4503071004713688003
+      Smoke_101: 4089349638823219663
+      Smoke_102: 2331555798967520951
+      Smoke_103: -8257525585041488860
+      Smoke_104: -4452801688855068561
+      Smoke_105: 1560998592000968416
+      Smoke_106: 7378777981403708053
+      Smoke_107: 163708871953050935
+      Smoke_108: -5845488678044420342
+      Smoke_109: -5751422956578820866
+      Smoke_11: 3291914812987065182
+      Smoke_110: 8481809628017743008
+      Smoke_111: 5926475825406918548
+      Smoke_112: -6863172631115412321
+      Smoke_113: 1682547745480351400
+      Smoke_114: 6368112923868157318
+      Smoke_115: -4984546760298329655
+      Smoke_116: -1713551997375841309
+      Smoke_117: -2748554754086880886
+      Smoke_118: 183325296022540335
+      Smoke_119: -1895920155182313143
+      Smoke_12: -3644940872334523152
+      Smoke_120: 1965072894963151434
+      Smoke_121: -5074980300393383564
+      Smoke_122: -3336857019983057259
+      Smoke_123: 6062568225589761649
+      Smoke_124: -68097765368917297
+      Smoke_125: 4783663987453182712
+      Smoke_126: 990326044175230779
+      Smoke_127: 4983973524901746934
+      Smoke_128: -5607961070244446852
+      Smoke_129: -3905039866204904367
+      Smoke_13: -3155058853054514227
+      Smoke_130: 1867354364619390836
+      Smoke_131: 8406538477078673414
+      Smoke_132: -688499948086951692
+      Smoke_133: 2942810105323148394
+      Smoke_134: 7787184844140278002
+      Smoke_135: 6950816941328683819
+      Smoke_136: -5887048979615163663
+      Smoke_14: 4845831617191762501
+      Smoke_15: 7670101274396148412
+      Smoke_16: 7744114913408827971
+      Smoke_17: 5304412894329666404
+      Smoke_18: 1383997892178303698
+      Smoke_19: -3918070614324973492
+      Smoke_2: -8044494511525273312
+      Smoke_20: -3810084775486382840
+      Smoke_21: -8863649533586187953
+      Smoke_22: 4705083912650227132
+      Smoke_23: 7101278156983015490
+      Smoke_24: 6908994287709100554
+      Smoke_25: -2324691174676955833
+      Smoke_26: 5279049922332004655
+      Smoke_27: -6609100906405065491
+      Smoke_28: 5929195720467319475
+      Smoke_29: -8768479501448480288
+      Smoke_3: 4012990250835332762
+      Smoke_30: 7468655911165676131
+      Smoke_31: -8030458083417864876
+      Smoke_32: -8377615684083439254
+      Smoke_33: -3175012787262864827
+      Smoke_34: 3968171630643270128
+      Smoke_35: 5098422688997760548
+      Smoke_36: 1250376368589706309
+      Smoke_37: 7231061365531395737
+      Smoke_38: -1767965475672619506
+      Smoke_39: 2656758002276756044
+      Smoke_4: 7674693441881433481
+      Smoke_40: 5238977678495612565
+      Smoke_41: -8085299572306231171
+      Smoke_42: -4836007956851269220
+      Smoke_43: -8632300728645556905
+      Smoke_44: -7601939296221125179
+      Smoke_45: -2722936368193902587
+      Smoke_46: 5080756132467807463
+      Smoke_47: 7884227830804600740
+      Smoke_48: -7471814290348461928
+      Smoke_49: -7496845249193300688
+      Smoke_5: -4176298113601619864
+      Smoke_50: -392699018393608201
+      Smoke_51: -4105313541984481621
+      Smoke_52: -7526726616729657360
+      Smoke_53: 7357026340250039234
+      Smoke_54: 8052401722487902391
+      Smoke_55: -5303205446134086582
+      Smoke_56: 6889714120741983015
+      Smoke_57: 850478943186844624
+      Smoke_58: 6174218517577869626
+      Smoke_59: -2402632475526329870
+      Smoke_6: -7707245647601438625
+      Smoke_60: -8025613347129195418
+      Smoke_61: 679464964370918463
+      Smoke_62: 3948695473998874783
+      Smoke_63: -619852695363791832
+      Smoke_64: 1336633080546928899
+      Smoke_65: -7566683024984755800
+      Smoke_66: 5798961331397854819
+      Smoke_67: -2005816611132649225
+      Smoke_68: 5983206565264555292
+      Smoke_69: -3980701825080146808
+      Smoke_7: -4073179049984778777
+      Smoke_70: 1500896529840190020
+      Smoke_71: -3203413931664377607
+      Smoke_72: -6773614559054125922
+      Smoke_73: 5922891952441061536
+      Smoke_74: -5882584411308289226
+      Smoke_75: -6456494066325834340
+      Smoke_76: -2132812770678087107
+      Smoke_77: -5579541837678156683
+      Smoke_78: -7676391399546276278
+      Smoke_79: 4076906517348559416
+      Smoke_8: -4653406051338019027
+      Smoke_80: -730937740196653933
+      Smoke_81: -7763278231457757822
+      Smoke_82: 556188415772936864
+      Smoke_83: -5982463423714981863
+      Smoke_84: -2282827248232778102
+      Smoke_85: -5147254539673902997
+      Smoke_86: -2997252386444554772
+      Smoke_87: -1088299308338020285
+      Smoke_88: -5531696495758977100
+      Smoke_89: -1066309103402057516
+      Smoke_9: 5533179496836470288
+      Smoke_90: 6863427547824509070
+      Smoke_91: -3622204214698005070
+      Smoke_92: -5504918121510532032
+      Smoke_93: -2018309916985407525
+      Smoke_94: 2496552670623948692
+      Smoke_95: 4659531721336917623
+      Smoke_96: -5711575448357081267
+      Smoke_97: 4153468554611959858
+      Smoke_98: 4254216296200765289
+      Smoke_99: -7080255487494953331
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
