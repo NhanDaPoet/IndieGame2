@@ -833,6 +833,112 @@ public class PlayerInventory : NetworkBehaviour
         // ApplyConsumableEffect(stack.itemData);
     }
 
+    [Command]
+    public void CmdApplyEnchant(
+    int slotIndex, bool isHotbar,
+    int enchantId, int level,
+    int catalystItemId, int catalystCost)
+    {
+        // Validate server-side
+        ItemStack[] inv = isHotbar ? hotbar : mainInventory;
+        int max = isHotbar ? hotbarSize : mainInventorySize;
+        if (slotIndex < 0 || slotIndex >= max) return;
+
+        ItemStack target = inv[slotIndex];
+        if (target.IsEmpty || target.itemData == null) return;
+        if (level < 1) return;
+
+        // Lookup catalyst
+        ItemData catalystData = itemDatabase.GetItemData(catalystItemId);
+        if (catalystData == null || !catalystData.isCatalyst) return;
+
+        // Đếm catalyst đủ không
+        int totalCatalyst = GetTotalItemCount(catalystItemId); // đếm cả hotbar+inventory
+        if (totalCatalyst < catalystCost) return;
+
+        // Lookup enchant def (tạm: quét Resources; bạn có thể thay bằng Database riêng)
+        EnchantmentDefinition def = FindEnchantDef(enchantId);
+        if (def == null) return;
+
+        // Target type hợp lệ?
+        if (!def.IsAllowedFor(target.itemData.itemType)) return;
+
+        // Level hợp lệ? (Ngoài ra, bạn có thể ràng buộc level tối đa theo catalystTier)
+        level = Mathf.Clamp(level, def.minLevel, def.maxLevel);
+
+        // Sockets:
+        int socketsMax = GetMaxSocketsFor(target.itemData);
+        if (target.enchantments == null) target.enchantments = new List<EnchantmentInstance>();
+        if (target.enchantments.Count >= socketsMax) return;
+
+        // Conflict check
+        foreach (var e in target.enchantments)
+        {
+            var exist = FindEnchantDef(e.enchantId);
+            if (exist != null && (exist.conflicts.Contains(def) || def.conflicts.Contains(exist)))
+                return;
+        }
+
+        // Tiêu catalyst trước (an toàn)
+        ServerConsumeItems(catalystItemId, catalystCost);
+        // Áp enchant
+        target.enchantments.Add(new EnchantmentInstance { enchantId = enchantId, level = level });
+        inv[slotIndex] = target;
+        if (isHotbar) RpcUpdateHotbarSlot(slotIndex, target.itemId, target.quantity);
+        else RpcUpdateMainInventorySlot(slotIndex, target.itemId, target.quantity);
+    }
+
+    [Server]
+    private int GetMaxSocketsFor(ItemData data)
+    {
+        if (data == null) return 0;
+        if (data.overrideMaxSockets > -1) return data.overrideMaxSockets;
+        switch (data.rarity)
+        {
+            case ItemRarity.Common: return 2;
+            case ItemRarity.Uncommon: return 2;
+            case ItemRarity.Rare: return 3;
+            case ItemRarity.Epic: return 4;
+            case ItemRarity.Legendary: return 5;
+            default: return 2;
+        }
+    }
+
+    [Server]
+    private void ServerConsumeItems(int itemId, int amount)
+    {
+        for (int i = 0; i < hotbarSize && amount > 0; i++)
+        {
+            if (!hotbar[i].IsEmpty && hotbar[i].itemId == itemId)
+            {
+                int take = Mathf.Min(hotbar[i].quantity, amount);
+                hotbar[i].quantity -= take;
+                amount -= take;
+                if (hotbar[i].quantity <= 0) hotbar[i].Clear();
+                RpcUpdateHotbarSlot(i, hotbar[i].itemId, hotbar[i].quantity);
+            }
+        }
+        for (int i = 0; i < mainInventorySize && amount > 0; i++)
+        {
+            if (!mainInventory[i].IsEmpty && mainInventory[i].itemId == itemId)
+            {
+                int take = Mathf.Min(mainInventory[i].quantity, amount);
+                mainInventory[i].quantity -= take;
+                amount -= take;
+                if (mainInventory[i].quantity <= 0) mainInventory[i].Clear();
+                RpcUpdateMainInventorySlot(i, mainInventory[i].itemId, mainInventory[i].quantity);
+            }
+        }
+    }
+
+    [Server]
+    private EnchantmentDefinition FindEnchantDef(int enchantId)
+    {
+        var all = Resources.FindObjectsOfTypeAll<EnchantmentDefinition>();
+        foreach (var e in all) if (e.id == enchantId) return e;
+        return null;
+    }
+
 
     public bool CanStackWith(int slotA, int slotB, bool isHotbarA, bool isHotbarB)
     {

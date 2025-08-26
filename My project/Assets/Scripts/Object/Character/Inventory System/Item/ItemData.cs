@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
@@ -11,6 +12,20 @@ public class ItemData : ScriptableObject
     public ItemType itemType;
     public ItemRarity rarity; 
     public string description;
+
+    [Header("Enchant/Catalyst")]
+    [Tooltip("Nếu là catalyst dùng để enchant (thay XP).")]
+    public bool isCatalyst = false;
+
+    [Tooltip("Bậc catalyst (càng cao cho phép roll level enchant cao hơn).")]
+    public int catalystTier = 0;
+
+    [Tooltip("Số socket tối đa cho item này (mặc định theo rarity). -1 để dùng mặc định theo rarity.")]
+    public int overrideMaxSockets = -1;
+
+    [Header("Fuel (Smelting)")]
+    [Tooltip("Nếu >0, item là fuel với thời lượng cháy này.")]
+    public float fuelBurnTime = 0f;
 }
 public enum ItemType
 {
@@ -48,23 +63,34 @@ public struct ItemStack
     public int quantity;
     public ItemData itemData;
 
+    public List<EnchantmentInstance> enchantments;
+
     public ItemStack(int id, int qty, ItemData data = null)
     {
         itemId = id;
         quantity = qty;
         itemData = data;
+        enchantments = null;
     }
     //TODO : Enchant, upgrade -> crafting table, enchant table, npc trade
-
     public bool IsEmpty => itemId == 0 || quantity <= 0;
-    public bool CanStackWith(ItemStack other) => itemId == other.itemId; //&& itemData == other.itemData //one id but with two instance
+    public bool CanStackWith(ItemStack other)
+    {
+        if (itemId != other.itemId) return false;
+        bool selfHasEnchant = enchantments != null && enchantments.Count > 0;
+        bool otherHasEnchant = other.enchantments != null && other.enchantments.Count > 0;
+        if (selfHasEnchant || otherHasEnchant) return false;
+        return true;
+    }
+
     public int GetMaxStackSize() => itemData?.maxStackSize ?? 64;
 
     public ItemStack Split(int amount)
     {
         int splitAmount = Mathf.Min(amount, quantity);
         quantity -= splitAmount;
-        return new ItemStack(itemId, splitAmount, itemData);
+        var split = new ItemStack(itemId, splitAmount, itemData);
+        return split;
     }
 
     public void Clear()
@@ -72,6 +98,7 @@ public struct ItemStack
         itemId = 0;
         quantity = 0;
         itemData = null;
+        enchantments = null;
     }
 }
 
