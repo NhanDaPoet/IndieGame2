@@ -27,7 +27,9 @@ public class InventoryUI : NetworkBehaviour
     private InventorySlotUI[] mainInventorySlots;
     private InventorySlotUI[] hotbarSlots;
     public PlayerInventory playerInventory;
+
     private bool isInventoryPanelOpen = false;
+    private bool hasUserSelectedHotbar = false;
 
     private InventorySlotUI draggedSlot;
     private GameObject draggedItemVisual;
@@ -83,9 +85,37 @@ public class InventoryUI : NetworkBehaviour
             CleanupDrag();
             return;
         }
-
         bool dragHandled = false;
-        if (targetSlot != null && targetSlot != draggedSlot)
+        if (targetSlot == null)
+        {
+            if (draggedSlot is CraftingSlotUI)
+            {
+                if (!originalDraggedStack.IsEmpty && draggedQuantity > 0 && draggedQuantity <= originalDraggedStack.quantity)
+                {
+                    playerInventory.DropItemFromCraftingSlot(originalDraggedStack.itemId, draggedQuantity, originalDraggedStack.itemData);
+                    int remainingQuantity = originalDraggedStack.quantity - draggedQuantity;
+                    if (remainingQuantity > 0)
+                    {
+                        draggedSlot.UpdateSlot(new ItemStack(originalDraggedStack.itemId, remainingQuantity, originalDraggedStack.itemData));
+                    }
+                    else
+                    {
+                        draggedSlot.UpdateSlot(new ItemStack());
+                    }
+                    dragHandled = true;
+                }
+            }
+            else
+            {
+                ItemStack stackToDrop = draggedSlot.GetItemStack();
+                if (!stackToDrop.IsEmpty && draggedQuantity > 0)
+                {
+                    playerInventory.DropItem(draggedSlot.SlotIndex, draggedSlot.IsHotbar, draggedQuantity);
+                    dragHandled = true;
+                }
+            }
+        }
+        else
         {
             if (CanDropOnSlot(targetSlot))
             {
@@ -94,42 +124,33 @@ public class InventoryUI : NetworkBehaviour
             }
             else
             {
-                // Invalid drop - restore original state
                 RestoreOriginalDraggedSlot();
             }
         }
-        else if (targetSlot == null)
-        {
-            // Drop to world (optional - uncomment if needed)
-            // DropToWorld(draggedSlot, draggedQuantity);
-            // dragHandled = true;
-            RestoreOriginalDraggedSlot();
-        }
-        else
-        {
-            // Dropped on same slot - restore original state
-            RestoreOriginalDraggedSlot();
-        }
-
-        // Reset visual states
         if (draggedSlot != null)
         {
             draggedSlot.SetDragVisuals(false);
             draggedSlot.ResetPosition();
         }
-
         CleanupDrag();
-
-        // Update crafting result if needed
         if (craftingUI != null)
+        {
             craftingUI.UpdateCraftingResult();
+        }
     }
 
     private void RestoreOriginalDraggedSlot()
     {
         if (draggedSlot != null && draggedSlot is CraftingSlotUI)
         {
-            draggedSlot.UpdateSlot(originalDraggedStack);
+            if (!originalDraggedStack.IsEmpty)
+            {
+                draggedSlot.UpdateSlot(originalDraggedStack);
+                if (craftingUI != null)
+                {
+                    craftingUI.UpdateCraftingResult();
+                }
+            }
         }
     }
 
@@ -139,11 +160,8 @@ public class InventoryUI : NetworkBehaviour
         {
             return false;
         }
-
-        ItemStack draggedStack = CreateDraggedItemStack(); // Create proper stack representation
+        ItemStack draggedStack = CreateDraggedItemStack(); 
         ItemStack targetStack = targetSlot.GetItemStack();
-
-        // Special handling for crafting slots
         if (targetSlot is CraftingSlotUI && !(draggedSlot is ResultSlotUI))
         {
             if (targetStack.IsEmpty) return true;
@@ -153,28 +171,19 @@ public class InventoryUI : NetworkBehaviour
                 int availableSpace = targetStack.GetMaxStackSize() - targetStack.quantity;
                 return availableSpace >= draggedQuantity;
             }
-
-            return true; // Allow replacement in crafting slot
+            return true;
         }
-
-        // Don't allow dropping into ResultSlotUI
         if (targetSlot is ResultSlotUI)
         {
             return false;
         }
-
-        // Handle empty target slot
         if (targetStack.IsEmpty) return true;
-
-        // Handle stackable items
         if (draggedStack.CanStackWith(targetStack))
         {
             int availableSpace = targetStack.GetMaxStackSize() - targetStack.quantity;
             return availableSpace >= draggedQuantity;
         }
-
-        // Allow swapping for regular inventory slots
-        return !(targetSlot.IsHotbar && draggedSlot.IsHotbar); // Prevent hotbar-to-hotbar invalid swaps
+        return !(targetSlot.IsHotbar && draggedSlot.IsHotbar);
     }
 
     private ItemStack CreateDraggedItemStack()
@@ -192,7 +201,6 @@ public class InventoryUI : NetworkBehaviour
 
     public void HandleSlotDrop(InventorySlotUI fromSlot, InventorySlotUI toSlot, int quantity)
     {
-        // Get the appropriate source stack based on slot type
         ItemStack fromStack;
         if (fromSlot is CraftingSlotUI)
         {
@@ -202,8 +210,8 @@ public class InventoryUI : NetworkBehaviour
         {
             fromStack = fromSlot.GetItemStack();
         }
-
         ItemStack toStack = toSlot.GetItemStack();
+
         if (toSlot is CraftingSlotUI)
         {
             HandleDropToCraftingSlot(fromSlot, toSlot, quantity, fromStack, toStack);
@@ -222,31 +230,24 @@ public class InventoryUI : NetworkBehaviour
     {
         if (toStack.IsEmpty)
         {
-            // Drop into empty crafting slot
             toSlot.UpdateSlot(new ItemStack(fromStack.itemId, quantity, fromStack.itemData));
         }
         else if (toStack.itemId == fromStack.itemId && toStack.CanStackWith(fromStack))
         {
-            // Stack into crafting slot
             int newQuantity = Mathf.Min(toStack.quantity + quantity, toStack.GetMaxStackSize());
             int actualAdded = newQuantity - toStack.quantity;
             toSlot.UpdateSlot(new ItemStack(toStack.itemId, newQuantity, toStack.itemData));
-
-            // Adjust quantity taken from source
             quantity = actualAdded;
         }
         else
         {
-            // Replace item in crafting slot - swap
             toSlot.UpdateSlot(new ItemStack(fromStack.itemId, quantity, fromStack.itemData));
             if (fromSlot is CraftingSlotUI)
             {
                 fromSlot.UpdateSlot(toStack);
-                return; // Don't process further
+                return; 
             }
         }
-
-        // Update source slot using proper inventory system
         if (fromSlot is CraftingSlotUI)
         {
             int remainingQuantity = originalDraggedStack.quantity - quantity;
@@ -261,7 +262,6 @@ public class InventoryUI : NetworkBehaviour
         }
         else if (!(fromSlot is ResultSlotUI))
         {
-            // Regular inventory slot - use inventory system to remove items
             playerInventory.RemoveItems(fromSlot.SlotIndex, fromSlot.IsHotbar, quantity);
         }
     }
@@ -269,24 +269,19 @@ public class InventoryUI : NetworkBehaviour
     {
         if (toStack.IsEmpty)
         {
-            // Drop into empty regular slot - ADD TO ACTUAL INVENTORY
             if (toSlot.IsHotbar)
             {
-                // Add to hotbar through inventory system
                 playerInventory.CmdTryAddToSpecificSlot(fromStack.itemId, quantity, toSlot.SlotIndex, true);
             }
             else
             {
-                // Add to main inventory through inventory system
                 playerInventory.CmdTryAddToSpecificSlot(fromStack.itemId, quantity, toSlot.SlotIndex, false);
             }
         }
         else if (fromStack.CanStackWith(toStack))
         {
-            // Stack with existing items - USE INVENTORY SYSTEM
             int availableSpace = toStack.GetMaxStackSize() - toStack.quantity;
             int actualQuantity = Mathf.Min(quantity, availableSpace);
-
             if (actualQuantity > 0)
             {
                 if (toSlot.IsHotbar)
@@ -301,7 +296,6 @@ public class InventoryUI : NetworkBehaviour
             }
             else
             {
-                // No space - restore original
                 RestoreOriginalDraggedSlot();
                 return;
             }
@@ -318,13 +312,9 @@ public class InventoryUI : NetworkBehaviour
             {
                 playerInventory.CmdReplaceSlotFromCrafting(fromStack.itemId, quantity, toSlot.SlotIndex, false);
             }
-
-            // Update crafting slot
             fromSlot.UpdateSlot(toStack);
             return;
         }
-
-        // Update crafting slot
         int remainingQuantity = originalDraggedStack.quantity - quantity;
         if (remainingQuantity > 0)
         {
@@ -371,22 +361,17 @@ public class InventoryUI : NetworkBehaviour
                 return;
             }
         }
-
         draggedItemVisual = new GameObject("DraggedItem");
         draggedItemVisual.transform.SetParent(dragCanvas.transform);
         draggedItemVisual.transform.SetAsLastSibling();
-
         var image = draggedItemVisual.AddComponent<Image>();
         image.sprite = itemStack.itemData?.icon;
         image.raycastTarget = false;
-
         var canvasGroup = draggedItemVisual.AddComponent<CanvasGroup>();
         canvasGroup.alpha = 0.8f;
         canvasGroup.blocksRaycasts = false;
-
         var rectTransform = draggedItemVisual.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(64, 64);
-
         if (quantity > 1)
         {
             CreateQuantityText(draggedItemVisual, quantity);
@@ -397,14 +382,12 @@ public class InventoryUI : NetworkBehaviour
     {
         GameObject quantityGO = new GameObject("QuantityText");
         quantityGO.transform.SetParent(parent.transform);
-
         var text = quantityGO.AddComponent<TextMeshProUGUI>();
         text.text = quantity.ToString();
         text.fontSize = 14;
         text.color = Color.white;
         text.alignment = TextAlignmentOptions.BottomRight;
         text.raycastTarget = false;
-
         var rectTransform = quantityGO.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0.7f, 0f);
         rectTransform.anchorMax = new Vector2(1f, 0.3f);
@@ -418,12 +401,11 @@ public class InventoryUI : NetworkBehaviour
         {
             Destroy(draggedItemVisual);
         }
-
         draggedSlot = null;
         draggedItemVisual = null;
         draggedQuantity = 0;
         isDragActive = false;
-        originalDraggedStack = new ItemStack(); // Reset original stack
+        originalDraggedStack = new ItemStack();
     }
 
     // ===== SLOT INTERACTION HANDLERS =====
@@ -473,9 +455,40 @@ public class InventoryUI : NetworkBehaviour
         }
     }
 
+    private bool IsDraggingFromCraftingSlot()
+    {
+        return isDragActive && draggedSlot != null && draggedSlot is CraftingSlotUI;
+    }
+
     public void DropSingleItem(InventorySlotUI slot)
     {
-        DropToWorld(slot, 1);
+        if (slot is CraftingSlotUI)
+        {
+            ItemStack stack = slot.GetItemStack();
+            if (!stack.IsEmpty)
+            {
+                playerInventory.DropItemFromCraftingSlot(stack.itemId, 1, stack.itemData);
+
+                int remainingQuantity = stack.quantity - 1;
+                if (remainingQuantity > 0)
+                {
+                    slot.UpdateSlot(new ItemStack(stack.itemId, remainingQuantity, stack.itemData));
+                }
+                else
+                {
+                    slot.UpdateSlot(new ItemStack());
+                }
+
+                if (craftingUI != null)
+                {
+                    craftingUI.UpdateCraftingResult();
+                }
+            }
+        }
+        else
+        {
+            DropToWorld(slot, 1);
+        }
     }
 
     public void UseItem(InventorySlotUI slot)
@@ -489,23 +502,41 @@ public class InventoryUI : NetworkBehaviour
         {
             if (slot is CraftingSlotUI)
             {
-                ItemStack stack = slot.GetItemStack();
-                if (stack.quantity >= quantity)
+                ItemStack stackToDrop;
+                if (isDragActive && slot == draggedSlot && !originalDraggedStack.IsEmpty)
                 {
-                    playerInventory.DropItemFromCraftingSlot(stack.itemId, quantity, stack.itemData);
-
-                    int remainingQuantity = stack.quantity - quantity;
-                    if (remainingQuantity > 0)
+                    stackToDrop = originalDraggedStack;
+                }
+                else
+                {
+                    stackToDrop = slot.GetItemStack();
+                }
+                if (!stackToDrop.IsEmpty && quantity <= stackToDrop.quantity)
+                {
+                    playerInventory.DropItemFromCraftingSlot(stackToDrop.itemId, quantity, stackToDrop.itemData);
+                    if (!isDragActive || slot != draggedSlot)
                     {
-                        slot.UpdateSlot(new ItemStack(stack.itemId, remainingQuantity, stack.itemData));
+                        int remainingQuantity = stackToDrop.quantity - quantity;
+                        if (remainingQuantity > 0)
+                        {
+                            slot.UpdateSlot(new ItemStack(stackToDrop.itemId, remainingQuantity, stackToDrop.itemData));
+                        }
+                        else
+                        {
+                            slot.UpdateSlot(new ItemStack());
+                        }
                     }
-                    else
+                    if (craftingUI != null)
                     {
-                        slot.UpdateSlot(new ItemStack());
+                        craftingUI.UpdateCraftingResult();
                     }
                 }
             }
-            else if (!(slot is ResultSlotUI))
+            else if (slot is ResultSlotUI)
+            {
+                Debug.LogWarning("Cannot drop from result slot directly");
+            }
+            else
             {
                 playerInventory.DropItem(slot.SlotIndex, slot.IsHotbar, quantity);
             }
@@ -533,33 +564,43 @@ public class InventoryUI : NetworkBehaviour
 
     public void OnSlotClicked(InventorySlotUI slot)
     {
-        if (playerInventory == null || !playerInventory.isLocalPlayer)
-        {
-            return;
-        }
-
+        if (playerInventory == null || !playerInventory.isLocalPlayer) return;
         if (slot is CraftingSlotUI)
         {
             craftingUI.UpdateCraftingResult();
+            return;
         }
-        else if (slot is ResultSlotUI)
+        if (slot is ResultSlotUI)
         {
             craftingUI.OnResultSlotClicked();
+            return;
         }
-        else
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
-            float currentTime = Time.time;
-
-            if (currentTime - lastClickTime <= doubleClickTime && slot == lastClickedSlot)
-            {
-                // Double-click detected
-                HandleDoubleClick(slot);
-            }
-
-            lastClickTime = currentTime;
-            lastClickedSlot = slot;
+            QuickMoveStack(slot);
+            return;
+        }
+        float currentTime = Time.time;
+        if (currentTime - lastClickTime <= doubleClickTime && slot == lastClickedSlot)
+        {
+            HandleDoubleClick(slot);
+        }
+        lastClickTime = currentTime;
+        lastClickedSlot = slot;
+        if (slot.IsHotbar)
+        {
+            SelectHotbarSlot(slot.SlotIndex);
         }
     }
+
+    private void QuickMoveStack(InventorySlotUI fromSlot)
+    {
+        ItemStack stack = fromSlot.GetItemStack();
+        if (stack.IsEmpty) return;
+        bool fromIsHotbar = fromSlot.IsHotbar;
+        playerInventory.CmdQuickMove(fromSlot.SlotIndex, fromIsHotbar);
+    }
+
 
     private void HandleDoubleClick(InventorySlotUI slot)
     {
@@ -614,6 +655,7 @@ public class InventoryUI : NetworkBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha0 + i))
             {
+                hasUserSelectedHotbar = true;
                 SelectHotbarSlot(i - 1);
                 break;
             }
@@ -629,6 +671,7 @@ public class InventoryUI : NetworkBehaviour
             {
                 int currentSlot = playerInventory.GetSelectedHotbarSlot();
                 int newSlot = scroll > 0 ? (currentSlot - 1 + 9) % 9 : (currentSlot + 1) % 9;
+                hasUserSelectedHotbar = true;
                 SelectHotbarSlot(newSlot);
             }
         }
@@ -651,20 +694,39 @@ public class InventoryUI : NetworkBehaviour
             RestoreOriginalDraggedSlot();
             EndDrag(null);
         }
+        ResetAllSlotHighlights();
+        //Cursor.lockState = isInventoryPanelOpen ? CursorLockMode.None : CursorLockMode.Locked;
+        //Cursor.visible = isInventoryPanelOpen;
+    }
 
-        Cursor.lockState = isInventoryPanelOpen ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = isInventoryPanelOpen;
+    private void ResetAllSlotHighlights()
+    {
+        foreach (var slot in mainInventorySlots)
+        {
+            slot.SetSlotHighlight(slot.normalColor);
+        }
+        foreach (var slot in hotbarSlots)
+        {
+            slot.SetSlotHighlight(slot.normalColor);
+        }
+        //foreach (var slot in craftingUI.GetCraftingSlots())
+        //{
+        //    slot.SetSlotHighlight(slot.normalColor);
+        //}
+        //foreach (var slot in craftingUI.GetResultSlots())
+        //{
+        //    slot.SetSlotHighlight(slot.normalColor);
+        //}
     }
 
     private void DropSelectedHotbarItem()
     {
+        if (!hasUserSelectedHotbar) return;
         int selectedSlot = playerInventory.GetSelectedHotbarSlot();
         var selectedStack = playerInventory.GetHotbarSlot(selectedSlot);
-
         if (!selectedStack.IsEmpty)
         {
             int dropAmount = selectedStack.quantity;
-
             if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
                 dropAmount = 1;
             else if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))

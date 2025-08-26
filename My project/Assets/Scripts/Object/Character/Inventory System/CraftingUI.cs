@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 using static CraftingRecipe;
 
@@ -13,7 +14,7 @@ public class CraftingUI : NetworkBehaviour
     private CraftingSlotUI[,] craftingSlots = new CraftingSlotUI[3, 3];
     private InventoryUI inventoryUI;
     private PlayerInventory playerInventory;
-    private (int offsetX, int offsetY) lastMatchedRecipeOffset; // Lưu vị trí khớp của công thức
+    private (int offsetX, int offsetY) lastMatchedRecipeOffset; 
 
     private void Start()
     {
@@ -56,84 +57,75 @@ public class CraftingUI : NetworkBehaviour
         UpdateCraftingResult();
     }
 
+    private struct MatchData
+    {
+        public CraftingRecipe recipe;
+        public int rMin, rMax, cMin, cMax;   
+        public int gMin, gMax, hMin, hMax;     
+        public int height, width;           
+    }
+
     public void UpdateCraftingResult()
     {
-        ItemStack[,] currentGrid = new ItemStack[3, 3];
+        ItemStack[,] grid = new ItemStack[3, 3];
         for (int i = 0; i < 3; i++)
-        {
             for (int j = 0; j < 3; j++)
-            {
-                currentGrid[i, j] = craftingSlots[i, j].GetItemStack();
-            }
-        }
+                grid[i, j] = craftingSlots[i, j].GetItemStack();
 
         ItemStack result = new ItemStack();
-        lastMatchedRecipeOffset = (0, 0);
 
         foreach (var recipe in recipes)
         {
-            if (CheckRecipeMatch(currentGrid, recipe, out var offset))
+            if (recipe.isShapeless)
             {
-                // FIXED: Calculate maximum possible crafts based on available materials
-                int maxCrafts = CalculateMaxPossibleCrafts(currentGrid, recipe);
+                int maxCrafts = CalculateMaxPossibleCraftsShapeless(grid, recipe);
                 if (maxCrafts > 0)
                 {
-                    result = new ItemStack(
-                        recipe.result.itemId,
-                        recipe.result.quantity * maxCrafts,
-                        recipe.result.itemData
-                    );
+                    result = new ItemStack(recipe.result.itemId, recipe.result.quantity * maxCrafts, recipe.result.itemData);
+                    break;
                 }
-                lastMatchedRecipeOffset = offset;
-                break;
+            }
+            else
+            {
+                if (TryMatchShaped(grid, recipe, out var match))
+                {
+                    int maxCrafts = CalculateMaxPossibleCrafts(grid, match);
+                    if (maxCrafts > 0)
+                    {
+                        result = new ItemStack(recipe.result.itemId, recipe.result.quantity * maxCrafts, recipe.result.itemData);
+                    }
+                    break;
+                }
             }
         }
-
         resultSlot.UpdateSlot(result);
     }
 
-    // NEW METHOD: Calculate maximum number of times a recipe can be crafted
-    private int CalculateMaxPossibleCrafts(ItemStack[,] craftingGrid, CraftingRecipe recipe)
+    private int CalculateMaxPossibleCrafts(ItemStack[,] grid, MatchData match)
     {
-        int minPossibleCrafts = int.MaxValue;
-        bool hasRequiredItems = false;
+        int minCrafts = int.MaxValue;
+        bool hasAny = false;
 
-        for (int i = 0; i < 3; i++)
+        for (int dr = 0; dr < match.height; dr++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int dc = 0; dc < match.width; dc++)
             {
-                RecipeSlot recipeSlot = recipe.GetSlot(i, j);
-                if (recipeSlot.itemId != 0) // If this slot requires an item
-                {
-                    hasRequiredItems = true;
-                    ItemStack gridStack = craftingGrid[i, j];
-
-                    if (gridStack.IsEmpty || gridStack.itemId != recipeSlot.itemId)
-                    {
-                        return 0; // Recipe can't be made
-                    }
-
-                    // Calculate how many times this slot can satisfy the recipe
-                    int possibleCraftsFromThisSlot = gridStack.quantity / recipeSlot.quantity;
-                    minPossibleCrafts = Mathf.Min(minPossibleCrafts, possibleCraftsFromThisSlot);
-                }
+                var rSlot = match.recipe.GetSlot(match.rMin + dr, match.cMin + dc);
+                if (rSlot.itemId == 0) continue; 
+                hasAny = true;
+                var gStack = grid[match.gMin + dr, match.hMin + dc];
+                if (gStack.IsEmpty || gStack.itemId != rSlot.itemId) return 0;
+                int possible = gStack.quantity / rSlot.quantity;
+                if (possible < minCrafts) minCrafts = possible;
             }
         }
-
-        // If no required items found, recipe can't be made
-        if (!hasRequiredItems)
-        {
-            return 0;
-        }
-
-        return minPossibleCrafts == int.MaxValue ? 0 : minPossibleCrafts;
+        if (!hasAny) return 0;
+        return (minCrafts == int.MaxValue) ? 0 : minCrafts;
     }
 
     private bool CheckRecipeMatch(ItemStack[,] craftingGrid, CraftingRecipe recipe, out (int offsetX, int offsetY) offset)
     {
         offset = (0, 0);
-
-        // Kiểm tra toàn bộ lưới 3x3, yêu cầu khớp chính xác
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -154,8 +146,7 @@ public class CraftingUI : NetworkBehaviour
                 }
             }
         }
-
-        offset = (0, 0); // Không cần offset vì yêu cầu khớp chính xác
+        offset = (0, 0);
         return true;
     }
 
@@ -169,49 +160,178 @@ public class CraftingUI : NetworkBehaviour
         playerInventory.CmdTakeCraftingResultClick(singleRecipeResult.itemId, singleRecipeResult.quantity, maxCrafts);
     }
 
-    // NEW METHOD: Get result for a single recipe craft
     public ItemStack GetSingleRecipeResult()
     {
-        ItemStack[,] currentGrid = new ItemStack[3, 3];
+        ItemStack[,] grid = new ItemStack[3, 3];
         for (int i = 0; i < 3; i++)
-        {
             for (int j = 0; j < 3; j++)
-            {
-                currentGrid[i, j] = craftingSlots[i, j].GetItemStack();
-            }
-        }
-
+                grid[i, j] = craftingSlots[i, j].GetItemStack();
         foreach (var recipe in recipes)
         {
-            if (CheckRecipeMatch(currentGrid, recipe, out var offset))
+            if (recipe.isShapeless)
             {
-                return recipe.result;
+                if (CalculateMaxPossibleCraftsShapeless(grid, recipe) > 0)
+                    return recipe.result;
+            }
+            else
+            {
+                if (TryMatchShaped(grid, recipe, out _))
+                    return recipe.result;
             }
         }
-
         return new ItemStack();
     }
 
-    // NEW METHOD: Get maximum possible crafts (public version)
-    public int GetMaxPossibleCrafts()
+    private bool GetRecipeBounds(CraftingRecipe recipe, out int rMin, out int rMax, out int cMin, out int cMax)
     {
-        ItemStack[,] currentGrid = new ItemStack[3, 3];
+        rMin = 3; rMax = -1; cMin = 3; cMax = -1;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                currentGrid[i, j] = craftingSlots[i, j].GetItemStack();
+                var slot = recipe.GetSlot(i, j);
+                if (slot.itemId != 0)
+                {
+                    if (i < rMin) rMin = i;
+                    if (i > rMax) rMax = i;
+                    if (j < cMin) cMin = j;
+                    if (j > cMax) cMax = j;
+                }
             }
         }
+        return rMax >= rMin && cMax >= cMin; 
+    }
 
+    private bool GetGridBounds(ItemStack[,] grid, out int gMin, out int gMax, out int hMin, out int hMax)
+    {
+        gMin = 3; gMax = -1; hMin = 3; hMax = -1;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (!grid[i, j].IsEmpty)
+                {
+                    if (i < gMin) gMin = i;
+                    if (i > gMax) gMax = i;
+                    if (j < hMin) hMin = j;
+                    if (j > hMax) hMax = j;
+                }
+            }
+        }
+        return gMax >= gMin && hMax >= hMin; 
+    }
+
+    private void ConsumeShapelessMaterials(ItemStack[,] grid, int recipeCount, CraftingRecipe recipe)
+    {
+        var req = recipe.GetShapelessDict();
+        if (req.Count == 0 || recipeCount <= 0) return;
+        var toConsume = new Dictionary<int, int>();
+        foreach (var kv in req) toConsume[kv.Key] = kv.Value * recipeCount;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+            {
+                var s = grid[i, j];
+                if (s.IsEmpty || !toConsume.ContainsKey(s.itemId)) continue;
+                int need = toConsume[s.itemId];
+                if (need <= 0) continue;
+                int take = Mathf.Min(need, s.quantity);
+                int remain = s.quantity - take;
+                toConsume[s.itemId] -= take;
+                if (remain <= 0)
+                    craftingSlots[i, j].UpdateSlot(new ItemStack());
+                else
+                    craftingSlots[i, j].UpdateSlot(new ItemStack(s.itemId, remain, s.itemData));
+            }
+    }
+
+    private int CalculateMaxPossibleCraftsShapeless(ItemStack[,] grid, CraftingRecipe recipe)
+    {
+        var req = recipe.GetShapelessDict();
+        if (req.Count == 0) return 0;
+        var have = BuildGridCounts(grid);
+        if (have.Count == 0) return 0;
+        foreach (var kv in have)
+            if (!req.ContainsKey(kv.Key))
+                return 0;
+        int minTimes = int.MaxValue;
+        foreach (var kv in req)
+        {
+            int id = kv.Key;
+            int need = kv.Value;
+            if (!have.TryGetValue(id, out int haveQty)) return 0;
+            int can = haveQty / need;
+            if (can < minTimes) minTimes = can;
+        }
+        return (minTimes == int.MaxValue) ? 0 : minTimes;
+    }
+
+    private bool TryMatchShaped(ItemStack[,] grid, CraftingRecipe recipe, out MatchData match)
+    {
+        match = default;
+        if (!GetRecipeBounds(recipe, out int rMin, out int rMax, out int cMin, out int cMax))
+            return false; 
+        if (!GetGridBounds(grid, out int gMin, out int gMax, out int hMin, out int hMax))
+            return false; 
+        int rHeight = rMax - rMin + 1;
+        int rWidth = cMax - cMin + 1;
+        int gHeight = gMax - gMin + 1;
+        int gWidth = hMax - hMin + 1;
+        if (rHeight != gHeight || rWidth != gWidth)
+            return false;
+        for (int dr = 0; dr < rHeight; dr++)
+        {
+            for (int dc = 0; dc < rWidth; dc++)
+            {
+                var rSlot = recipe.GetSlot(rMin + dr, cMin + dc);
+                var gStack = grid[gMin + dr, hMin + dc];
+                if (rSlot.itemId == 0)
+                {
+                    if (!gStack.IsEmpty) return false;
+                }
+                else
+                {
+                    if (gStack.IsEmpty) return false;
+                    if (gStack.itemId != rSlot.itemId) return false;
+                    if (gStack.quantity < rSlot.quantity) return false;
+                }
+            }
+        }
+        match = new MatchData
+        {
+            recipe = recipe,
+            rMin = rMin,
+            rMax = rMax,
+            cMin = cMin,
+            cMax = cMax,
+            gMin = gMin,
+            gMax = gMax,
+            hMin = hMin,
+            hMax = hMax,
+            height = rHeight,
+            width = rWidth
+        };
+        return true;
+    }
+
+    public int GetMaxPossibleCrafts()
+    {
+        ItemStack[,] grid = new ItemStack[3, 3];
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                grid[i, j] = craftingSlots[i, j].GetItemStack();
         foreach (var recipe in recipes)
         {
-            if (CheckRecipeMatch(currentGrid, recipe, out var offset))
+            if (recipe.isShapeless)
             {
-                return CalculateMaxPossibleCrafts(currentGrid, recipe);
+                int max = CalculateMaxPossibleCraftsShapeless(grid, recipe);
+                if (max > 0) return max;
+            }
+            else
+            {
+                if (TryMatchShaped(grid, recipe, out var match))
+                    return CalculateMaxPossibleCrafts(grid, match);
             }
         }
-
         return 0;
     }
 
@@ -251,43 +371,61 @@ public class CraftingUI : NetworkBehaviour
 
     public void ConsumeRecipeMaterials(int recipeCount)
     {
-        ItemStack[,] currentGrid = new ItemStack[3, 3];
+        ItemStack[,] grid = new ItemStack[3, 3];
         for (int i = 0; i < 3; i++)
-        {
             for (int j = 0; j < 3; j++)
-            {
-                currentGrid[i, j] = craftingSlots[i, j].GetItemStack();
-            }
-        }
-
+                grid[i, j] = craftingSlots[i, j].GetItemStack();
         foreach (var recipe in recipes)
         {
-            if (CheckRecipeMatch(currentGrid, recipe, out var offset))
+            if (recipe.isShapeless)
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int j = 0; j < 3; j++)
-                    {
-                        RecipeSlot recipeSlot = recipe.GetSlot(i, j);
-                        if (recipeSlot.itemId != 0)
-                        {
-                            ItemStack gridStack = currentGrid[i, j];
-                            if (!gridStack.IsEmpty)
-                            {
-                                int totalConsume = recipeSlot.quantity * recipeCount;
-                                int newQuantity = gridStack.quantity - totalConsume;
-
-                                if (newQuantity <= 0)
-                                    craftingSlots[i, j].UpdateSlot(new ItemStack());
-                                else
-                                    craftingSlots[i, j].UpdateSlot(new ItemStack(gridStack.itemId, newQuantity, gridStack.itemData));
-                            }
-                        }
-                    }
-                }
+                int max = CalculateMaxPossibleCraftsShapeless(grid, recipe);
+                if (max <= 0) continue;
+                recipeCount = Mathf.Min(recipeCount, max);
+                ConsumeShapelessMaterials(grid, recipeCount, recipe);
                 break;
             }
+            else
+            {
+                if (TryMatchShaped(grid, recipe, out var match))
+                {
+                    int max = CalculateMaxPossibleCrafts(grid, match);
+                    if (max <= 0) continue;
+                    recipeCount = Mathf.Min(recipeCount, max);
+                    for (int dr = 0; dr < match.height; dr++)
+                        for (int dc = 0; dc < match.width; dc++)
+                        {
+                            var rSlot = recipe.GetSlot(match.rMin + dr, match.cMin + dc);
+                            if (rSlot.itemId == 0) continue;
+
+                            var gStack = grid[match.gMin + dr, match.hMin + dc];
+                            int consume = rSlot.quantity * recipeCount;
+                            int newQty = gStack.quantity - consume;
+
+                            if (newQty <= 0)
+                                craftingSlots[match.gMin + dr, match.hMin + dc].UpdateSlot(new ItemStack());
+                            else
+                                craftingSlots[match.gMin + dr, match.hMin + dc]
+                                    .UpdateSlot(new ItemStack(gStack.itemId, newQty, gStack.itemData));
+                        }
+                    break;
+                }
+            }
         }
+    }
+
+    private Dictionary<int, int> BuildGridCounts(ItemStack[,] grid)
+    {
+        var counts = new Dictionary<int, int>();
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+            {
+                var s = grid[i, j];
+                if (s.IsEmpty || s.itemId <= 0) continue;
+                if (!counts.ContainsKey(s.itemId)) counts[s.itemId] = 0;
+                counts[s.itemId] += s.quantity;
+            }
+        return counts;
     }
 
     // MODIFIED METHOD: Consume materials for a single recipe craft

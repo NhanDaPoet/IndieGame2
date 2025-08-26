@@ -85,6 +85,54 @@ public class PlayerInventory : NetworkBehaviour
             RpcUpdateMainInventorySlot(slotIndex, mainInventory[slotIndex].itemId, mainInventory[slotIndex].quantity);
         }
     }
+
+    [Command]
+    public void CmdQuickMove(int fromIndex, bool fromIsHotbar)
+    {
+        ItemStack[] fromInv = fromIsHotbar ? hotbar : mainInventory;
+        ItemStack[] toInv = fromIsHotbar ? mainInventory : hotbar;
+        int fromMax = fromIsHotbar ? hotbarSize : mainInventorySize;
+        int toMax = fromIsHotbar ? mainInventorySize : hotbarSize;
+        if (fromIndex < 0 || fromIndex >= fromMax) return;
+        ItemStack src = fromInv[fromIndex];
+        if (src.IsEmpty || src.itemData == null) return;
+        int remaining = src.quantity;
+        for (int i = 0; i < toMax && remaining > 0; i++)
+        {
+            if (!toInv[i].IsEmpty && toInv[i].itemId == src.itemId)
+            {
+                int space = toInv[i].GetMaxStackSize() - toInv[i].quantity;
+                if (space > 0)
+                {
+                    int add = Mathf.Min(space, remaining);
+                    toInv[i].quantity += add;
+                    remaining -= add;
+
+                    if (fromIsHotbar) RpcUpdateMainInventorySlot(i, toInv[i].itemId, toInv[i].quantity);
+                    else RpcUpdateHotbarSlot(i, toInv[i].itemId, toInv[i].quantity);
+                }
+            }
+        }
+        for (int i = 0; i < toMax && remaining > 0; i++)
+        {
+            if (toInv[i].IsEmpty)
+            {
+                int add = Mathf.Min(remaining, src.GetMaxStackSize());
+                toInv[i] = new ItemStack(src.itemId, add, src.itemData);
+                remaining -= add;
+
+                if (fromIsHotbar) RpcUpdateMainInventorySlot(i, toInv[i].itemId, toInv[i].quantity);
+                else RpcUpdateHotbarSlot(i, toInv[i].itemId, toInv[i].quantity);
+            }
+        }
+        src.quantity = remaining;
+        if (src.quantity <= 0) src.Clear();
+        fromInv[fromIndex] = src;
+        if (fromIsHotbar) RpcUpdateHotbarSlot(fromIndex, src.itemId, src.quantity);
+        else RpcUpdateMainInventorySlot(fromIndex, src.itemId, src.quantity);
+    }
+
+
     public void DropItemFromCraftingSlot(int itemId, int quantity, ItemData itemData)
     {
         if (!isLocalPlayer) return;

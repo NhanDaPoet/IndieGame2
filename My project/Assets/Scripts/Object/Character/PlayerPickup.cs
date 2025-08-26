@@ -49,7 +49,6 @@ public class PlayerPickup : NetworkBehaviour
             WorldItem worldItem = hit.GetComponent<WorldItem>();
             if (worldItem != null)
             {
-                Debug.Log($"[{name}] Found WorldItem: {worldItem.name}");
                 CmdTryPickupItem(worldItem.netIdentity);
                 break;
             }

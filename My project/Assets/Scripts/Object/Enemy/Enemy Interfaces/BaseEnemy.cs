@@ -121,8 +121,11 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
     [SerializeField] protected float chaseStickTime = 0.6f;
 
     [Header("Hit Reaction")]
-    [SerializeField] protected float hitKnockback = 2.4f;  
+    [SerializeField] protected float hitKnockback = 2.4f;
     [SerializeField] protected float hitStaggerDuration = 0.12f;
+    [SerializeField] protected float knockbackBackDist = 0.35f;
+    [SerializeField] protected float knockbackOutTime = 0.08f;
+    [SerializeField] protected float knockbackReturnTime = 0.07f;
     [SerializeField] protected GameObject deathFxPrefab;
 
     [SyncVar(hook = nameof(OnHealthChanged))]
@@ -164,6 +167,7 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
     protected float lastSeenTargetTime = -999f;
     protected float acquiredTargetTime = -999f;
     protected float knockbackEndTime;
+    Coroutine knockbackRoutine;
 
     protected Vector3 moveDestination;
     protected bool hasDestination = false;
@@ -401,21 +405,16 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
     public virtual void MoveTo(Vector3 target)
     {
         if (!SimulateAuthority) return;
-
+        if (Time.time < knockbackEndTime) return;
         moveDestination = new Vector3(target.x, target.y, 0f);
         hasDestination = true;
-
         Vector2 direction = (moveDestination - transform.position).normalized;
         rb.linearVelocity = direction * MoveSpeed;
-
         currentMovementDirection = direction;
         IsMoving = true;
-
         targetMoveX = direction.x;
         targetMoveY = direction.y;
-
         UpdateMovementDirection(direction);
-
         if (Time.time > lastDirectionChangeTime + 0.5f)
         {
             UpdateFacingDirection(direction);
@@ -802,14 +801,13 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
     public virtual void TakeDamage(float damage, GameObject attacker)
     {
         if (isDead) return;
-
         currentHealth -= damage;
-
         if (attacker != null)
         {
             FaceTarget(attacker.transform.position);
         }
-
+        if (isServer && rb != null && attacker != null)
+            StartKnockbackBounce((Vector2)attacker.transform.position);
         if (currentTarget == null && enemyType != EnemyType.Passive)
         {
             currentTarget = attacker;
@@ -820,12 +818,10 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
             currentTarget = attacker;
             ChangeState(EnemyState.Fleeing);
         }
-
         if (currentHealth <= 0)
         {
             Die();
         }
-
         RpcPlayDamageEffect();
     }
 
@@ -878,9 +874,14 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
     protected virtual void RpcPlayDeathEffect()
     {
         if (animator != null)
-        {
             animator.SetTrigger(animDieHash);
+        if (deathFxPrefab)
+        {
+            var fx = Instantiate(deathFxPrefab, transform.position, Quaternion.identity);
+            Destroy(fx, 2.5f);
         }
+        if (spriteRenderer != null)
+            StartCoroutine(FadeOutAndHide(0.25f));
     }
 
     protected virtual IEnumerator DestroyAfterDelay(float delay)
@@ -890,6 +891,21 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
             NetworkServer.Destroy(gameObject);
         else
             Destroy(gameObject);
+    }
+
+    private IEnumerator FadeOutAndHide(float time)
+    {
+        if (spriteRenderer == null) yield break;
+        Color c0 = spriteRenderer.color;
+        float t = 0f;
+        while (t < time)
+        {
+            t += Time.deltaTime;
+            float a = Mathf.Lerp(c0.a, 0f, t / time);
+            spriteRenderer.color = new Color(c0.r, c0.g, c0.b, a);
+            yield return null;
+        }
+        spriteRenderer.enabled = false;
     }
 
     protected virtual void ChangeState(EnemyState newState)
@@ -973,6 +989,46 @@ public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IMoveable, ICom
             animator.SetBool("IsMoving", netIsMoving);
             animator.SetInteger(animStateHash, (int)currentState);
         }
+    }
+
+    [Server]
+    protected void StartKnockbackBounce(Vector2 attackerPos)
+    {
+        if (knockbackRoutine != null) StopCoroutine(knockbackRoutine);
+        knockbackRoutine = StartCoroutine(KnockbackBounce(attackerPos));
+    }
+
+    [Server]
+    private IEnumerator KnockbackBounce(Vector2 attackerPos)
+    {
+        if (rb == null) yield break;
+        Vector2 start = rb.position;
+        Vector2 dir = (start - attackerPos).normalized;
+        if (dir.sqrMagnitude < 0.0001f) dir = Vector2.up;
+        Vector2 back = start + dir * knockbackBackDist;
+        knockbackEndTime = Time.time + hitStaggerDuration + knockbackOutTime + knockbackReturnTime;
+        rb.linearVelocity = Vector2.zero;
+        float t = 0f;
+        while (t < knockbackOutTime)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / knockbackOutTime);
+            float eased = 1f - (1f - k) * (1f - k); 
+            rb.MovePosition(Vector2.Lerp(start, back, eased));
+            yield return null;
+        }
+        t = 0f;
+        while (t < knockbackReturnTime)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / knockbackReturnTime);
+            float eased = k * k;
+            rb.MovePosition(Vector2.Lerp(back, start, eased));
+            yield return null;
+        }
+        rb.MovePosition(start);
+        rb.linearVelocity = Vector2.zero;
+        knockbackRoutine = null;
     }
 
     void OnSpeedChanged(float _, float v) { if (EnsureAnimatorReady()) animator.SetFloat(animSpeedHash, v); }

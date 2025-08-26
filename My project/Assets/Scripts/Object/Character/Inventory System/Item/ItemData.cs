@@ -54,9 +54,10 @@ public struct ItemStack
         quantity = qty;
         itemData = data;
     }
+    //TODO : Enchant, upgrade -> crafting table, enchant table, npc trade
 
     public bool IsEmpty => itemId == 0 || quantity <= 0;
-    public bool CanStackWith(ItemStack other) => itemId == other.itemId && itemData == other.itemData;
+    public bool CanStackWith(ItemStack other) => itemId == other.itemId; //&& itemData == other.itemData //one id but with two instance
     public int GetMaxStackSize() => itemData?.maxStackSize ?? 64;
 
     public ItemStack Split(int amount)

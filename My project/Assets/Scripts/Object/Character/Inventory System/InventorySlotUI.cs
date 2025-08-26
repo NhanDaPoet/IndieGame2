@@ -9,7 +9,8 @@ public class InventorySlotUI : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     [SerializeField] private Image itemIcon;
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private Image slotBackground;
-    [SerializeField] private Color normalColor = new Color(1f, 1f, 1f, 1f);
+
+    [SerializeField] public Color normalColor = new Color(1f, 1f, 1f, 1f);
 
     [SerializeField] public Color highlightColor = new Color(1f, 1f, 1f, 0.2f);
     [SerializeField] public Color validDropColor = new Color(0f, 1f, 0f, 0.3f);
@@ -24,7 +25,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public bool isDragging = false;
     public Vector3 originalPosition;
 
-    // Track if we should handle click after drag
     public bool dragStarted = false;
     public Vector3 pointerDownPosition;
     public const float DRAG_THRESHOLD = 10f;
@@ -191,7 +191,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             bool canDrop = inventoryUI.CanDropOnSlot(this);
             SetSlotHighlight(canDrop ? validDropColor : invalidDropColor);
         }
-
         if (!currentItemStack.IsEmpty && currentItemStack.itemData != null && !isDragging)
         {
             ShowTooltip();
@@ -273,7 +272,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerDownHandler, IPointerUpHan
         }
     }
 
-    private void HideTooltip()
+    public void HideTooltip()
     {
         if (ItemTooltip.Instance != null)
         {

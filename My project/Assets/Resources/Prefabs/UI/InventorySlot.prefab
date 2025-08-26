@@ -307,8 +307,11 @@ MonoBehaviour:
   quantityText: {fileID: 7115746734321083067}
   slotBackground: {fileID: 6863183743137372924}
   normalColor: {r: 0, g: 0, b: 0, a: 1}
-  highlightColor: {r: 1, g: 1, b: 1, a: 0.79607844}
+  highlightColor: {r: 1, g: 1, b: 1, a: 0.47058824}
   validDropColor: {r: 0, g: 1, b: 0, a: 0.3}
   invalidDropColor: {r: 1, g: 0, b: 0, a: 0.3}
   inventoryUI: {fileID: 0}
   isDragging: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  dragStarted: 0
+  pointerDownPosition: {x: 0, y: 0, z: 0}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Crafting Recipe", menuName = "Inventory/Crafting Recipe")]
@@ -14,31 +15,25 @@ public class CraftingRecipe : ScriptableObject
     private RecipeSlot[] gridData = new RecipeSlot[9];
 
     public ItemStack result;
+    public bool isShapeless = false;
+    public RecipeSlot[] shapelessRequirements;
+
     public RecipeSlot[,] Grid
     {
         get
         {
             RecipeSlot[,] grid = new RecipeSlot[3, 3];
             for (int i = 0; i < 3; i++)
-            {
                 for (int j = 0; j < 3; j++)
-                {
                     grid[i, j] = gridData[i * 3 + j];
-                }
-            }
             return grid;
         }
         set
         {
-            if (gridData == null || gridData.Length != 9)
-                gridData = new RecipeSlot[9];
+            if (gridData == null || gridData.Length != 9) gridData = new RecipeSlot[9];
             for (int i = 0; i < 3; i++)
-            {
                 for (int j = 0; j < 3; j++)
-                {
                     gridData[i * 3 + j] = value[i, j];
-                }
-            }
         }
     }
 
@@ -46,17 +41,14 @@ public class CraftingRecipe : ScriptableObject
     {
         if (row < 0 || row >= 3 || col < 0 || col >= 3)
             return new RecipeSlot { itemId = 0, quantity = 0 };
-        if (gridData == null || gridData.Length != 9)
-            InitializeGrid();
+        if (gridData == null || gridData.Length != 9) InitializeGrid();
         return gridData[row * 3 + col];
     }
 
     public void SetSlot(int row, int col, RecipeSlot slot)
     {
-        if (row < 0 || row >= 3 || col < 0 || col >= 3)
-            return;
-        if (gridData == null || gridData.Length != 9)
-            InitializeGrid();
+        if (row < 0 || row >= 3 || col < 0 || col >= 3) return;
+        if (gridData == null || gridData.Length != 9) InitializeGrid();
         gridData[row * 3 + col] = slot;
     }
 
@@ -77,24 +69,17 @@ public class CraftingRecipe : ScriptableObject
         }
     }
 
-    public bool MatchesGrid(ItemStack[,] craftingGrid)
+    public Dictionary<int, int> GetShapelessDict()
     {
-        for (int i = 0; i < 3; i++)
+        var dict = new Dictionary<int, int>();
+        if (shapelessRequirements == null) return dict;
+
+        foreach (var r in shapelessRequirements)
         {
-            for (int j = 0; j < 3; j++)
-            {
-                RecipeSlot recipeSlot = GetSlot(i, j);
-                if (recipeSlot.itemId == 0 && !craftingGrid[i, j].IsEmpty)
-                    return false;
-                if (recipeSlot.itemId != 0)
-                {
-                    if (craftingGrid[i, j].IsEmpty ||
-                        craftingGrid[i, j].itemId != recipeSlot.itemId ||
-                        craftingGrid[i, j].quantity < recipeSlot.quantity)
-                        return false;
-                }
-            }
+            if (r.itemId <= 0 || r.quantity <= 0) continue;
+            if (!dict.ContainsKey(r.itemId)) dict[r.itemId] = 0;
+            dict[r.itemId] += r.quantity;
         }
-        return true;
+        return dict;
     }
 }

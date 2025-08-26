@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class CraftingSlotUI : InventorySlotUI
 {
     private CraftingUI craftingUI;
+    private int draggedQuantity;
 
     private void Awake()
     {
@@ -14,7 +15,6 @@ public class CraftingSlotUI : InventorySlotUI
             {
                 Destroy(craftingSlots[i]);
             }
-            Debug.LogWarning($"Multiple CraftingSlotUI components found on {gameObject.name}. Removed duplicates.");
         }
     }
 
@@ -26,33 +26,51 @@ public class CraftingSlotUI : InventorySlotUI
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
+        //if (eventData.button != PointerEventData.InputButton.Left || GetItemStack().IsEmpty || inventoryUI == null)
+        //    return;
+        //base.OnBeginDrag(eventData);
+        //draggedQuantity = Mathf.Min(GetItemStack().quantity, draggedQuantity);
+        //if (craftingUI != null)
+        //{
+        //    StartCoroutine(UpdateCraftingAfterFrame());
+        //}
+
         if (eventData.button != PointerEventData.InputButton.Left || GetItemStack().IsEmpty || inventoryUI == null)
             return;
 
         base.OnBeginDrag(eventData);
 
-        // Update crafting result after starting drag
         if (craftingUI != null)
         {
-            // Delay the update to ensure drag state is properly set
             StartCoroutine(UpdateCraftingAfterFrame());
         }
     }
 
     public override void OnEndDrag(PointerEventData eventData)
     {
+        //if (!isDragging || inventoryUI == null)
+        //{
+        //    isDragging = false;
+        //    return;
+        //}
+        //base.OnEndDrag(eventData);
+        //if (craftingUI != null)
+        //{
+        //    StartCoroutine(UpdateCraftingAfterFrame());
+        //}
+        //if (eventData.pointerCurrentRaycast.gameObject == null)
+        //{
+        //    inventoryUI.DropToWorld(this, draggedQuantity);
+        //}
+
         if (!isDragging || inventoryUI == null)
         {
             isDragging = false;
             return;
         }
-
         base.OnEndDrag(eventData);
-
-        // Update crafting result after ending drag
         if (craftingUI != null)
         {
-            // Delay the update to ensure all slot states are properly updated
             StartCoroutine(UpdateCraftingAfterFrame());
         }
     }
@@ -60,16 +78,13 @@ public class CraftingSlotUI : InventorySlotUI
     public override void OnPointerDown(PointerEventData eventData)
     {
         base.OnPointerDown(eventData);
-
-        // Update crafting result immediately on pointer down
         if (craftingUI != null)
             craftingUI.UpdateCraftingResult();
     }
 
-    // Coroutine to update crafting result after frame to ensure all states are updated
     private System.Collections.IEnumerator UpdateCraftingAfterFrame()
     {
-        yield return null; // Wait one frame
+        yield return null;
         if (craftingUI != null)
             craftingUI.UpdateCraftingResult();
     }

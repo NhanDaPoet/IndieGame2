@@ -13,6 +13,11 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleSystem stageTransitionParticleSystem;
 
+    [Header("Hit FX")]
+    [SerializeField] private float hitShakeDistance = 0.06f;
+    [SerializeField] private float hitShakeTime = 0.08f;
+    [SerializeField] private GameObject hitFxPrefab;
+
     [Header("State (Synced)")]
     [SyncVar(hook = nameof(OnRemainingChanged))] private int remaining;
     [SyncVar(hook = nameof(OnStageIndexChanged))] private int stageIndex;
@@ -129,7 +134,11 @@ public abstract class ResourceNodeBase : NetworkBehaviour
 
         uint playerNetId = player.netIdentity != null ? player.netIdentity.netId : 0;
         if (playerNetId == 0) return;
-
+        Vector2 fromDir = ((Vector2)transform.position - (Vector2)player.transform.position).normalized;
+        RpcOnHitFX(fromDir);
+        var body = GetComponent<Rigidbody2D>();
+        if (body && body.bodyType == RigidbodyType2D.Dynamic)
+            body.AddForce(fromDir * 1.2f, ForceMode2D.Impulse);
         if (definition.gatherMode == GatherMode.Solo)
         {
             if (!occupied || occupierNetId != playerNetId) return;
@@ -323,6 +332,19 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         StartCoroutine(PlayParticleEffectCoroutine(transitionStageIndex));
     }
 
+    [ClientRpc]
+    protected void RpcOnHitFX(Vector2 fromDir)
+    {
+        if (spriteRenderer != null)
+            StartCoroutine(HitFlash());
+        StartCoroutine(HitShake(fromDir));
+        if (hitFxPrefab)
+        {
+            var fx = Instantiate(hitFxPrefab, transform.position, Quaternion.identity);
+            Destroy(fx, 2f);
+        }
+    }
+
     private IEnumerator PlayParticleEffectCoroutine(int transitionStageIndex)
     {
         yield return null;
@@ -345,6 +367,31 @@ public abstract class ResourceNodeBase : NetworkBehaviour
             yield return new WaitForSeconds(targetPS.main.duration + 1f);
             targetPS.gameObject.SetActive(false);
         }
+    }
+
+    private IEnumerator HitFlash()
+    {
+        if (spriteRenderer == null) yield break;
+        Color o = spriteRenderer.color;
+        spriteRenderer.color = new Color(o.r + 0.15f, o.g + 0.15f, o.b + 0.15f, o.a);
+        yield return new WaitForSeconds(0.06f);
+        spriteRenderer.color = o;
+    }
+
+    private IEnumerator HitShake(Vector2 fromDir)
+    {
+        Vector3 basePos = transform.position;
+        float t = 0f;
+        Vector2 tangent = Vector2.Perpendicular(fromDir).normalized;
+        while (t < hitShakeTime)
+        {
+            t += Time.deltaTime;
+            float k = (1f - (t / hitShakeTime)); 
+            Vector2 offset = tangent * (hitShakeDistance * k) * Mathf.Sin(t * 80f);
+            transform.position = basePos + (Vector3)offset;
+            yield return null;
+        }
+        transform.position = basePos;
     }
 
     private ParticleSystem GetParticleSystemForStage(int stageIndex)

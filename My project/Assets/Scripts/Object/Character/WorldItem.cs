@@ -127,35 +127,26 @@ public class WorldItem : NetworkBehaviour
     [Server]
     public void TryPickup(PlayerMovement player)
     {
-        Debug.Log($"[Server] TryPickup called for player: {player.name}");
-
         if (!canBePickedUp)
         {
-            Debug.Log("[Server] Item cannot be picked up yet");
             return;
         }
-
         if (itemId == 0 || quantity <= 0)
         {
-            Debug.Log("[Server] Invalid item data");
             return;
         }
-
         PlayerInventory inventory = player.GetComponent<PlayerInventory>();
         if (inventory == null)
         {
-            Debug.Log("[Server] PlayerInventory not found!");
             return;
         }
-
         ItemStack stack = new ItemStack(itemId, quantity, itemData);
         bool success = inventory.TryAddItemStack(stack);
-
-        Debug.Log($"[Server] Pickup success: {success}");
-
         if (success)
         {
-            CmdPickupItem();
+            RpcPlayPickupEffect();
+            poolManager.ReturnItem(gameObject);
+            //CmdPickupItem()
         }
     }
 
@@ -170,7 +161,7 @@ public class WorldItem : NetworkBehaviour
     [ClientRpc]
     private void RpcPlayPickupEffect()
     {
-        // Hiệu ứng nhặt Item
+        // Loot effect
     }
 
     [TargetRpc]
