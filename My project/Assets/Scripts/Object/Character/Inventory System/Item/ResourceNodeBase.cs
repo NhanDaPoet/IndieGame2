@@ -9,6 +9,9 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     [Header("Definition")]
     public ResourceDefinition definition;
 
+    [Header("State (Synced)")]
+    [SyncVar] private string biome;
+
     [Header("Visuals")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private ParticleSystem stageTransitionParticleSystem;
@@ -39,6 +42,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         occupierNetId = 0;
         poolManager = FindFirstObjectByType<ItemPoolManager>();
         biomeProvider = BiomeManager.Get();
+        biome = biomeProvider.GetBiomeAt(transform.position);
     }
     public override void OnStartClient()
     {
@@ -248,6 +252,24 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         var inv = player != null ? player.GetComponent<PlayerInventory>() : null;
         var held = inv != null ? inv.GetSelectedHotbarItem() : new ItemStack();
         return held.itemData;
+    }
+
+    [Server]
+    public void SpawnResourceNodes()
+    {
+        if (biome == "Forest")
+        {
+            // Spawn tree or wood-related resource
+        }
+        else if (biome == "Desert")
+        {
+            // Spawn cactus or sand-related resource
+        }
+        else if (biome == "Mountain")
+        {
+            // Spawn stone or ore-related resource
+        }
+        // Add more biomes as needed
     }
 
     // ===================== VISUALS =====================
