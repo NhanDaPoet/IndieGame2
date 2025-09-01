@@ -312,6 +312,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultBiome: default
+  biomeDatabase: {fileID: 0}
+  biomes: []
 --- !u!1 &377751318
 GameObject:
   m_ObjectHideFlags: 0

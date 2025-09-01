@@ -32,7 +32,6 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     private float sharedAccumulatedTime;
     private float lastSoloHitTime;
     protected ItemPoolManager poolManager;
-    protected IBiomeProvider biomeProvider;
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -41,8 +40,6 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         occupied = false;
         occupierNetId = 0;
         poolManager = FindFirstObjectByType<ItemPoolManager>();
-        biomeProvider = BiomeManager.Get();
-        biome = biomeProvider.GetBiomeAt(transform.position);
     }
     public override void OnStartClient()
     {
@@ -198,7 +195,6 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     {
         if (definition == null || definition.lootTable == null) return;
         if (poolManager == null) poolManager = FindFirstObjectByType<ItemPoolManager>();
-        string biome = biomeProvider != null ? biomeProvider.GetBiomeAt(transform.position) : "default";
         ItemData usingTool = GetPlayerTool(sourcePlayer);
         var rng = new System.Random();
         var drops = definition.lootTable.Roll(rng, biome, usingTool);
