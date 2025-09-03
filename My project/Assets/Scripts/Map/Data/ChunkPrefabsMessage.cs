@@ -6,6 +6,7 @@ public struct ChunkPrefabsMessage : NetworkMessage
     public ChunkCoord coord;
     public int version;
     public PrefabSpawn[] spawns;
+    public byte[] biomeData;
 }
 public struct ChunkUnloadMessage : NetworkMessage
 {

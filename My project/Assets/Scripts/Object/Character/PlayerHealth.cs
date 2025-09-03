@@ -73,6 +73,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
 
     private void OnHealthChanged(float oldHealth, float newHealth)
     {
-        Debug.Log($"Player health changed: {newHealth}/{maxHealth}");
+
     }
 }

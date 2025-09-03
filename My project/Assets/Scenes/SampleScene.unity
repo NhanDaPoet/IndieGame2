@@ -345,7 +345,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1469575087
-  m_SortingLayer: 3
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -542,6 +542,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TilemapChunkBuilder
   grid: {fileID: 1974814706}
   groundTilemap: {fileID: 75096777}
+  maxChunksPerFrame: 2
+  buildBudgetMs: 3
 --- !u!4 &443426876
 Transform:
   m_ObjectHideFlags: 0
@@ -1429,6 +1431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4d4a08c6eb4a643ac8c713336573fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClientPrefabRuntime
+  maxSpawnPerFrame: 5
+  maxDespawnPerFrame: 10
+  defaultPrewarmCount: 0
 --- !u!4 &1527991981
 Transform:
   m_ObjectHideFlags: 0

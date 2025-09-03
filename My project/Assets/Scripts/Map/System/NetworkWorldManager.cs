@@ -51,6 +51,7 @@ public class NetworkWorldManager : NetworkBehaviour
         {
             Debug.LogError("Missing shared assets (BiomeSet/PrefabRegistry/NoiseSettings) in Resources.");
         }
+        Debug.Log($"Successfully loaded: BiomeSet, PrefabRegistry, NoiseSettings, BiomeRegionSettings.");
     }
 
     [Server]
@@ -88,13 +89,20 @@ public class NetworkWorldManager : NetworkBehaviour
                 cd.biome[lx, ly] = BiomeService.SampleBiome(wx, wy, meta.seed, noiseSettings, biomeRegion, biomeSet);
             }
         }
+        var bytes = new byte[cs * cs];
+        int idx = 0;
+        for (int ly = 0; ly < cs; ly++)
+            for (int lx = 0; lx < cs; lx++)
+                bytes[idx++] = (byte)cd.biome[lx, ly];
+        cd.biomeBytes = bytes;
+        cd.spawns = PrefabScatter.BuildSpawnsForChunk(cd, biomeSet, prefabRegistry, meta.seed);
         cd.ready = true;
         chunks[coord] = cd;
-        var spawns = PrefabScatter.BuildSpawnsForChunk(cd, biomeSet, prefabRegistry, meta.seed);
-        var msg = new ChunkPrefabsMessage { coord = coord, version = cd.version, spawns = spawns };
+        var msg = new ChunkPrefabsMessage { coord = coord, version = cd.version, spawns = cd.spawns, biomeData = cd.biomeBytes };
         BroadcastChunkToInterestedClients(coord, msg);
         yield break;
     }
+
 
     [Server]
     private void BroadcastChunkToInterestedClients(ChunkCoord coord, ChunkPrefabsMessage msg)
@@ -146,8 +154,13 @@ public class NetworkWorldManager : NetworkBehaviour
                 }
                 else
                 {
-                    var spawns = PrefabScatter.BuildSpawnsForChunk(cd, biomeSet, prefabRegistry, meta.seed);
-                    conn.Send(new ChunkPrefabsMessage { coord = c, version = cd.version, spawns = spawns });
+                    conn.Send(new ChunkPrefabsMessage
+                    {
+                        coord = c,
+                        version = cd.version,
+                        spawns = cd.spawns, 
+                        biomeData = cd.biomeBytes 
+                    });
                 }
             }
         }
@@ -173,7 +186,12 @@ public class NetworkWorldManager : NetworkBehaviour
     [Client]
     private void OnChunkPrefabsMessage(ChunkPrefabsMessage msg)
     {
-        TilemapChunkBuilder.Instance.BuildGroundForChunk(msg.coord);
+        if (msg.spawns == null || msg.spawns.Length == 0)
+        {
+            Debug.LogError("Received empty spawn list from server.");
+            return;
+        }
+        TilemapChunkBuilder.Instance.EnqueueBuild(msg.coord, msg.biomeData);
         ClientPrefabRuntime.Instance.ApplySpawns(msg.spawns);
     }
 
