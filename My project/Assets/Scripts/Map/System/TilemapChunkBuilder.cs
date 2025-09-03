@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,8 +8,7 @@ public class TilemapChunkBuilder : MonoBehaviour
 
     [SerializeField] private Grid grid;
     [SerializeField] private Tilemap groundTilemap;
-
-    private Dictionary<BiomeType, TileBase> _tiles;
+    private Dictionary<BiomeType, BiomeDefinition> _biomeDefs;
 
     private void Awake()
     {
@@ -18,12 +17,17 @@ public class TilemapChunkBuilder : MonoBehaviour
 
     private void EnsureCache()
     {
-        if (_tiles != null) return;
-        _tiles = new Dictionary<BiomeType, TileBase>();
-        foreach (var b in NetworkWorldManager.Instance.BiomeSet.biomes)
+        if (_biomeDefs != null) return;
+
+        _biomeDefs = new Dictionary<BiomeType, BiomeDefinition>();
+        var set = NetworkWorldManager.Instance.BiomeSet;
+        set.BuildCache();
+
+        foreach (var b in set.biomes)
         {
-            if (!_tiles.ContainsKey(b.biomeType))
-                _tiles[b.biomeType] = b.groundTile;
+            if (b == null) continue;
+            if (!_biomeDefs.ContainsKey(b.biomeType))
+                _biomeDefs[b.biomeType] = b;
         }
     }
 
@@ -43,13 +47,15 @@ public class TilemapChunkBuilder : MonoBehaviour
             {
                 int wx = x0 + lx;
                 int wy = y0 + ly;
-                BiomeType bt = BiomeService.SampleBiome(wx, wy, meta.seed, noise);
-                var tile = _tiles.TryGetValue(bt, out var t) ? t : null;
-
-                if (tile != null)
+                BiomeType bt = BiomeService.SampleBiome(wx, wy,meta.seed,NetworkWorldManager.Instance.Noise,NetworkWorldManager.Instance.BiomeRegion,NetworkWorldManager.Instance.BiomeSet);
+                if (_biomeDefs.TryGetValue(bt, out var def) && def != null)
                 {
-                    positions.Add(new Vector3Int(wx, wy, 0));
-                    tiles.Add(tile);
+                    var tile = def.PickGroundTileDeterministic(wx, wy, meta.seed);
+                    if (tile != null)
+                    {
+                        positions.Add(new Vector3Int(wx, wy, 0));
+                        tiles.Add(tile);
+                    }
                 }
             }
         }

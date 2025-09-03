@@ -19,7 +19,8 @@ public class NetworkWorldManager : NetworkBehaviour
     private NoiseSettings noiseSettings;
     private Dictionary<ChunkCoord, ChunkData> chunks = new();
     private HashSet<NetworkConnectionToClient> readyConnections = new();
-    private Dictionary<int, ChunkCoord> playerLastChunk = new(); 
+    private Dictionary<int, ChunkCoord> playerLastChunk = new();
+    private BiomeRegionSettings biomeRegion;
 
     public override void OnStartServer()
     {
@@ -30,7 +31,7 @@ public class NetworkWorldManager : NetworkBehaviour
         NetworkServer.RegisterHandler<ChunkPrefabsMessage>((conn, msg) => { /* no-op on server */ });
         StartCoroutine(GenerateSpawnRing(meta.minPlayableRadiusChunks));
     }
-
+    public BiomeRegionSettings BiomeRegion => biomeRegion;
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -45,6 +46,7 @@ public class NetworkWorldManager : NetworkBehaviour
         biomeSet = Resources.Load<BiomeSet>(meta.biomeSetResource);
         prefabRegistry = Resources.Load<PrefabRegistry>(meta.prefabRegistryResource);
         noiseSettings = Resources.Load<NoiseSettings>(meta.noiseSettingsResource);
+        biomeRegion = Resources.Load<BiomeRegionSettings>(meta.biomeRegionSettingsResource);
         if (!biomeSet || !prefabRegistry || !noiseSettings)
         {
             Debug.LogError("Missing shared assets (BiomeSet/PrefabRegistry/NoiseSettings) in Resources.");
@@ -83,7 +85,7 @@ public class NetworkWorldManager : NetworkBehaviour
             for (int ly = 0; ly < cs; ly++)
             {
                 int wy = y0 + ly;
-                cd.biome[lx, ly] = BiomeService.SampleBiome(wx, wy, meta.seed, noiseSettings);
+                cd.biome[lx, ly] = BiomeService.SampleBiome(wx, wy, meta.seed, noiseSettings, biomeRegion, biomeSet);
             }
         }
         cd.ready = true;
@@ -171,10 +173,7 @@ public class NetworkWorldManager : NetworkBehaviour
     [Client]
     private void OnChunkPrefabsMessage(ChunkPrefabsMessage msg)
     {
-        // 1) Build ground tiles locally từ Seed (deterministic) – để chắc, gọi builder
         TilemapChunkBuilder.Instance.BuildGroundForChunk(msg.coord);
-
-        // 2) Spawn prefabs theo danh sách
         ClientPrefabRuntime.Instance.ApplySpawns(msg.spawns);
     }
 
@@ -185,7 +184,6 @@ public class NetworkWorldManager : NetworkBehaviour
         ClientPrefabRuntime.Instance.DespawnChunk(msg.coord);
     }
 
-    // === API cho builder (client) dùng chung meta/biomeSet/noise ===
     public static NetworkWorldManager Instance { get; private set; }
     private void Awake() => Instance = this;
 

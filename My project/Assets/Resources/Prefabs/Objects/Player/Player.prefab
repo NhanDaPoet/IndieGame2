@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3928399573066831964}
   - component: {fileID: 5412482092051558964}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: InventoryPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 2912775876107491184}
   - component: {fileID: 7467815541391415320}
   - component: {fileID: 8822887743723369665}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: HotbarSelected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 2767579396707433643}
   - component: {fileID: 6153626944422765561}
   - component: {fileID: 3452442278704690017}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 7768257982557343944}
   - component: {fileID: 2338474459198067210}
   - component: {fileID: 1778450022191541010}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: CraftingGridPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 1763752685143374984}
   - component: {fileID: 5061077149188800947}
   - component: {fileID: 8734698316981722676}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: HotbarPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 5012224718266005246}
   - component: {fileID: 6508940930056453255}
   - component: {fileID: 7115632444352392301}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -583,8 +583,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 19337531
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -5329091641981806550, guid: f858117f24d135a49ab3e5f5388f8d3d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -596,7 +596,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &5655967798188199050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,7 +897,7 @@ GameObject:
   - component: {fileID: 3273261391424228870}
   - component: {fileID: 3077461188602617263}
   - component: {fileID: 1638395508105661287}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -972,6 +972,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3273261391424228870}
     m_Modifications:
+    - target: {fileID: 1652828758935070369, guid: 52b47cc80d7e82443822ef4261da5b6e, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5480542485562196200, guid: 52b47cc80d7e82443822ef4261da5b6e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1052,6 +1056,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5656684373203405582, guid: 52b47cc80d7e82443822ef4261da5b6e, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 7713270359082717456, guid: 52b47cc80d7e82443822ef4261da5b6e, type: 3}
       propertyPath: inventoryUI
       value: 
@@ -1059,6 +1067,10 @@ PrefabInstance:
     - target: {fileID: 7806056215744565486, guid: 52b47cc80d7e82443822ef4261da5b6e, type: 3}
       propertyPath: m_Name
       value: ResultSlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7806056215744565486, guid: 52b47cc80d7e82443822ef4261da5b6e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

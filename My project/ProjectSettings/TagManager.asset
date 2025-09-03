@@ -9,13 +9,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - Ground
   - Water
   - UI
   - Resource
   - Enemy
   - Effects
-  - 
+  - Player
   - 
   - 
   - 
@@ -41,6 +41,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 1469575087
+    locked: 0
+  - name: Resource
+    uniqueID: 893119339
+    locked: 0
+  - name: Player
+    uniqueID: 19337531
     locked: 0
   m_RenderingLayers:
   - Default

@@ -10,4 +10,5 @@ public class WorldMeta
     public string biomeSetResource = "Biomes/BiomeSet_Default";
     public string prefabRegistryResource = "Registries/PrefabRegistry_Default";
     public string noiseSettingsResource = "Registries/NoiseSettings_Default";
+    public string biomeRegionSettingsResource = "Registries/BiomeRegionSettings_Default";
 }
