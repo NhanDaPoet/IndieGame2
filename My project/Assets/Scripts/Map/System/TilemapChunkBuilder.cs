@@ -181,8 +181,6 @@ public class TilemapChunkBuilder : MonoBehaviour
         for (int i = 0; i < tileCount; i += tilesPerBatch)
         {
             int batchSize = Mathf.Min(tilesPerBatch, tileCount - i);
-
-            // Create batch arrays
             var batchPositions = new Vector3Int[batchSize];
             var batchTiles = new TileBase[batchSize];
 
@@ -190,18 +188,16 @@ public class TilemapChunkBuilder : MonoBehaviour
             System.Array.Copy(_reusableTiles, i, batchTiles, 0, batchSize);
 
             groundTilemap.SetTiles(batchPositions, batchTiles);
-
-            // Yield if we've spent too much time
-            if (stopwatch.ElapsedMilliseconds >= 1f) // 1ms per batch max
+            if (stopwatch.ElapsedMilliseconds >= 1f)
             {
                 stopwatch.Reset();
                 stopwatch.Start();
                 yield return null;
             }
         }
-
         Debug.Log($"Built chunk {coord} with {tileCount} tiles in {stopwatch.ElapsedMilliseconds}ms");
     }
+
 
     private TileBase GetCachedTile(BiomeDefinition def, int worldX, int worldY, int seed)
     {

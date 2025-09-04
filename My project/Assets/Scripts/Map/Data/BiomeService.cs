@@ -7,11 +7,11 @@ public static class BiomeService
     private const int BIOME_CACHE_GRID_SIZE = 4;
     //Elevation + Moisture + SeaLevel
     public static BiomeType SampleBiome(
-        int worldX, int worldY,
-        int seed,
-        NoiseSettings noise,
-        BiomeRegionSettings regionCfg,
-        BiomeSet biomeSet)
+    int worldX, int worldY,
+    int seed,
+    NoiseSettings noise,
+    BiomeRegionSettings regionCfg,
+    BiomeSet biomeSet)
     {
         // Tạo cache key dựa trên grid thô
         int cacheX = worldX / BIOME_CACHE_GRID_SIZE;
@@ -58,6 +58,7 @@ public static class BiomeService
 
         return resultBiome;
     }
+
 
     private static BiomeType PickBiomeFromPalette(BiomeRegionSettings cfg, int regionId)
     {

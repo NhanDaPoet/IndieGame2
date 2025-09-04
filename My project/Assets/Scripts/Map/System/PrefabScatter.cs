@@ -149,25 +149,20 @@ public static class PrefabScatter
                                       System.Random rand, int cs, BiomeType biomeType)
     {
         int spawned = 0;
-
         foreach (var pos in _candidateList)
         {
             if (spawned >= maxSpawns) break;
-
             if (!CheckSpacingOptimized(pid, pos, rule.minSpacing)) continue;
-
             if (rule.cluster && rule.clusterRadius > 0)
             {
                 spawned += ProcessClusterSpawn(rule, pid, pos, cd, rand, cs, biomeType, maxSpawns - spawned);
             }
             else
             {
-                // Single spawn
                 AddSpawnOptimized(pid, cd.coord, pos);
                 spawned++;
             }
         }
-
         return spawned;
     }
 

@@ -181,6 +181,7 @@ public class NetworkWorldManager : NetworkBehaviour
         Debug.Log($"Pre-generation complete! Generated {totalChunks} chunks successfully.");
     }
 
+
     [Server]
     private IEnumerator GenerateChunkOptimized(ChunkCoord coord)
     {
@@ -293,17 +294,12 @@ public class NetworkWorldManager : NetworkBehaviour
     private void Update()
     {
         if (!dynamicGeneration) return;
-
-        // Throttle player updates
         if (Time.time - lastPlayerUpdateTime < playerUpdateInterval)
         {
             return;
         }
-
         lastPlayerUpdateTime = Time.time;
         UpdatePlayerChunks();
-
-        // Process dynamic generation queue
         if (!processingDynamicGen && dynamicGenQueue.Count > 0 && !isPreGenerating)
         {
             StartCoroutine(ProcessDynamicGenerationQueue());

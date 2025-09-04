@@ -1,31 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-/// <summary>
-/// Client-side: Optimized prefab runtime với full object pooling
-/// Không instantiate trong runtime, chỉ activate/deactivate objects từ pool
-/// </summary>
 public class ClientPrefabRuntime : MonoBehaviour
 {
     public static ClientPrefabRuntime Instance { get; private set; }
 
     [Header("Performance Settings")]
     [Tooltip("Số lượng Activate tối đa mỗi frame")]
-    [SerializeField] private int maxSpawnPerFrame = 5; // Giảm từ 10 xuống 5
+    [SerializeField] private int maxSpawnPerFrame = 3; // Giảm từ 5 xuống 3
 
     [Tooltip("Số lượng Deactivate tối đa mỗi frame khi unload")]
-    [SerializeField] private int maxDespawnPerFrame = 10; // Giảm từ 20 xuống 10
+    [SerializeField] private int maxDespawnPerFrame = 5; // Giảm từ 10 xuống 5
 
     [Tooltip("Thời gian tối đa cho spawn mỗi frame (ms)")]
-    [SerializeField] private float maxSpawnTimePerFrameMs = 2f;
+    [SerializeField] private float maxSpawnTimePerFrameMs = 1.5f; // Giảm từ 2f xuống 1.5f
 
     [Header("Pool Settings")]
     [Tooltip("Pool size cho mỗi prefab type")]
-    [SerializeField] private int poolSizePerPrefab = 30; // Giảm từ 50 xuống 30
+    [SerializeField] private int poolSizePerPrefab = 20; // Giảm từ 30 xuống 20
 
     [Tooltip("Pool size cho prefabs phổ biến (trees, rocks...)")]
-    [SerializeField] private int commonPrefabPoolSize = 100; // Giảm từ 200 xuống 100
+    [SerializeField] private int commonPrefabPoolSize = 50; // Giảm từ 100 xuống 50
 
     [Header("Common Prefab Keys")]
     [Tooltip("Keys của các prefabs phổ biến cần pool size lớn")]
@@ -94,8 +91,8 @@ public class ClientPrefabRuntime : MonoBehaviour
     private IEnumerator InitializeAllPoolsAsync()
     {
         int poolsCreated = 0;
-        const int maxPoolsPerFrame = 3; // Giảm từ 5 xuống 3
-        const float maxTimePerFrameMs = 3f; // Giới hạn thời gian mỗi frame
+        const int maxPoolsPerFrame = 2; // Giảm từ 3 xuống 2
+        const float maxTimePerFrameMs = 2f; // Giảm từ 3f xuống 2f
         var stopwatch = new System.Diagnostics.Stopwatch();
 
         foreach (var kv in _registry._idToPrefab)
@@ -103,200 +100,52 @@ public class ClientPrefabRuntime : MonoBehaviour
             stopwatch.Reset();
             stopwatch.Start();
 
-            ushort pid = kv.Key;
-            GameObject prefab = kv.Value;
+            ushort id = kv.Key;
+            var prefab = kv.Value;
             if (prefab == null) continue;
 
-            int poolSize = GetPoolSizeForPrefab(prefab.name);
-            yield return StartCoroutine(CreatePoolAsync(pid, prefab, poolSize));
+            int poolSize = commonPrefabKeys.Any(k => prefab.name.Contains(k)) ? commonPrefabPoolSize : poolSizePerPrefab;
+            _pool[id] = new Stack<GameObject>(poolSize);
+            var parent = new GameObject($"Pool_{prefab.name}").transform;
+            parent.SetParent(transform, false);
+            _poolParents[id] = parent;
 
-            poolsCreated++;
-
-            // Kiểm tra thời gian và số lượng pools mỗi frame
-            if (poolsCreated >= maxPoolsPerFrame || stopwatch.ElapsedMilliseconds >= maxTimePerFrameMs)
+            for (int i = 0; i < poolSize; i++)
             {
-                poolsCreated = 0;
-                yield return null; // Cho phép frame khác chạy
+                var go = Instantiate(prefab, parent);
+                go.SetActive(false);
+                var idHolder = go.AddComponent<PrefabIdHolder>();
+                idHolder.PrefabId = id;
+                _pool[id].Push(go);
+                _idHolderCache[go] = idHolder;
+
+                if (++poolsCreated % maxPoolsPerFrame == 0 && stopwatch.ElapsedMilliseconds >= maxTimePerFrameMs)
+                {
+                    yield return null;
+                    stopwatch.Reset();
+                    stopwatch.Start();
+                }
             }
         }
     }
 
-    private IEnumerator CreatePoolAsync(ushort prefabId, GameObject prefab, int poolSize)
-    {
-        var parent = GetOrCreatePoolParent(prefabId);
-        var stack = new Stack<GameObject>();
-
-        const int objectsPerFrame = 5; // Tạo tối đa 5 objects mỗi frame
-        int created = 0;
-
-        for (int i = 0; i < poolSize; i++)
-        {
-            var go = Instantiate(prefab, parent);
-            go.SetActive(false);
-
-            var idHolder = go.GetComponent<PrefabIdHolder>();
-            if (!idHolder)
-            {
-                idHolder = go.AddComponent<PrefabIdHolder>();
-            }
-            idHolder.PrefabId = prefabId;
-
-            // Cache để tránh GetComponent sau này
-            _idHolderCache[go] = idHolder;
-            stack.Push(go);
-
-            created++;
-            if (created >= objectsPerFrame)
-            {
-                created = 0;
-                yield return null; // Spread across frames
-            }
-        }
-
-        _pool[prefabId] = stack;
-        Debug.Log($"Created pool for {prefab.name} (ID: {prefabId}) with {poolSize} objects");
-    }
-
-    private int GetPoolSizeForPrefab(string prefabName)
-    {
-        string lowerName = prefabName.ToLower();
-        foreach (string key in commonPrefabKeys)
-        {
-            if (lowerName.Contains(key.ToLower()))
-            {
-                return commonPrefabPoolSize;
-            }
-        }
-        return poolSizePerPrefab;
-    }
-
-    private Transform GetOrCreatePoolParent(ushort prefabId)
-    {
-        if (_poolParents.TryGetValue(prefabId, out var t)) return t;
-
-        var holder = new GameObject($"Pool_{prefabId}").transform;
-        holder.SetParent(transform, false);
-        _poolParents[prefabId] = holder;
-        return holder;
-    }
-
-    private GameObject RentFromPool(ushort prefabId)
-    {
-        if (!_pool.TryGetValue(prefabId, out var stack))
-        {
-            Debug.LogWarning($"Pool for prefabId {prefabId} not found");
-            return null;
-        }
-
-        if (stack.Count > 0)
-        {
-            var go = stack.Pop();
-            go.transform.SetParent(transform, false);
-            return go;
-        }
-
-        // Nếu pool hết, tạo thêm object mới (emergency fallback)
-        var prefab = _registry.GetPrefab(prefabId);
-        if (prefab != null)
-        {
-            var go = Instantiate(prefab);
-            var idHolder = go.GetComponent<PrefabIdHolder>();
-            if (!idHolder)
-            {
-                idHolder = go.AddComponent<PrefabIdHolder>();
-            }
-            idHolder.PrefabId = prefabId;
-            _idHolderCache[go] = idHolder;
-            Debug.LogWarning($"Pool for {prefab.name} exhausted, creating emergency instance");
-            return go;
-        }
-
-        return null;
-    }
-
-    private void ReturnToPool(ushort prefabId, GameObject go)
-    {
-        if (!go) return;
-
-        go.SetActive(false);
-        go.transform.SetParent(GetOrCreatePoolParent(prefabId), false);
-
-        if (_pool.TryGetValue(prefabId, out var stack))
-        {
-            stack.Push(go);
-        }
-    }
-
-    /// <summary>
-    /// Apply spawns from server - với duplicate protection và early exit
-    /// </summary>
     public void ApplySpawns(PrefabSpawn[] spawns)
     {
-        if (!_poolsInitialized)
-        {
-            Debug.LogWarning("Pools not yet initialized, queuing spawns for later");
-            StartCoroutine(WaitForPoolsAndApplySpawns(spawns));
-            return;
-        }
-
-        if (spawns == null || spawns.Length == 0)
-        {
-            return;
-        }
-
-        var spawnsByChunk = new Dictionary<ChunkCoord, List<PrefabSpawn>>();
-
         foreach (var spawn in spawns)
         {
-            var chunk = CellToChunk(spawn.cell);
-
-            // Skip đã processed chunks
-            if (processedChunks.Contains(chunk))
+            _spawnQueue.Enqueue(new SpawnJob
             {
-                continue;
-            }
-
-            if (!spawnsByChunk.TryGetValue(chunk, out var list))
-            {
-                list = new List<PrefabSpawn>();
-                spawnsByChunk[chunk] = list;
-            }
-            list.Add(spawn);
+                chunk = NetworkWorldManager.Instance.WorldToChunk(spawn.cell),
+                prefabId = spawn.prefabId,
+                worldPos = spawn.cell,
+                variant = spawn.variant
+            });
         }
 
-        foreach (var kvp in spawnsByChunk)
-        {
-            var chunk = kvp.Key;
-            var chunkSpawns = kvp.Value;
-
-            processedChunks.Add(chunk);
-
-            foreach (var spawn in chunkSpawns)
-            {
-                var worldPos = NetworkWorldManager.Instance.grid.CellToWorld(spawn.cell);
-                _spawnQueue.Enqueue(new SpawnJob
-                {
-                    chunk = chunk,
-                    prefabId = spawn.prefabId,
-                    worldPos = worldPos,
-                    variant = spawn.variant
-                });
-            }
-        }
-
-        if (_spawnQueue.Count > 0 && !_spawning)
+        if (!_spawning)
         {
             StartCoroutine(ProcessSpawnQueue());
         }
-    }
-
-    private IEnumerator WaitForPoolsAndApplySpawns(PrefabSpawn[] spawns)
-    {
-        while (!_poolsInitialized)
-        {
-            yield return null;
-        }
-        ApplySpawns(spawns);
     }
 
     private IEnumerator ProcessSpawnQueue()
@@ -315,19 +164,17 @@ public class ClientPrefabRuntime : MonoBehaviour
                    stopwatch.ElapsedMilliseconds < maxSpawnTimePerFrameMs)
             {
                 var job = _spawnQueue.Dequeue();
-                var go = RentFromPool(job.prefabId);
+                if (!_registry._idToPrefab.ContainsKey(job.prefabId)) continue;
 
-                if (go == null)
-                {
-                    continue;
-                }
+                GameObject go = GetFromPool(job.prefabId);
+                if (go == null) continue;
 
                 go.transform.position = job.worldPos;
                 go.SetActive(true);
 
                 if (!_spawnedByChunk.TryGetValue(job.chunk, out var list))
                 {
-                    list = new List<GameObject>();
+                    list = new List<GameObject>(50); // Pre-allocate với dung lượng ban đầu
                     _spawnedByChunk[job.chunk] = list;
                 }
                 list.Add(go);
@@ -341,32 +188,53 @@ public class ClientPrefabRuntime : MonoBehaviour
         _spawning = false;
     }
 
-    /// <summary>
-    /// Despawn entire chunk với time budget
-    /// </summary>
-    public void DespawnChunk(ChunkCoord coord)
+    private GameObject GetFromPool(ushort prefabId)
     {
-        if (!_spawnedByChunk.TryGetValue(coord, out var objects) || objects.Count == 0)
+        if (_pool.TryGetValue(prefabId, out var stack) && stack.Count > 0)
         {
+            return stack.Pop();
+        }
+
+        if (_registry._idToPrefab.TryGetValue(prefabId, out var prefab) && _poolParents.TryGetValue(prefabId, out var parent))
+        {
+            var go = Instantiate(prefab, parent);
+            var idHolder = go.AddComponent<PrefabIdHolder>();
+            idHolder.PrefabId = prefabId;
+            _idHolderCache[go] = idHolder;
+            return go;
+        }
+
+        return null;
+    }
+
+    private void ReturnToPool(ushort prefabId, GameObject go)
+    {
+        if (!_pool.ContainsKey(prefabId))
+        {
+            Destroy(go);
             return;
         }
 
-        Debug.Log($"Despawning {objects.Count} objects from chunk {coord}");
+        go.SetActive(false);
+        go.transform.SetParent(_poolParents[prefabId], false);
+        _pool[prefabId].Push(go);
+    }
 
-        // Queue all objects for despawn
+    public void DespawnChunk(ChunkCoord chunk)
+    {
+        if (!_spawnedByChunk.TryGetValue(chunk, out var objects)) return;
+
         foreach (var go in objects)
         {
             if (!go) continue;
-
             ushort pid = GetCachedPrefabId(go);
-            _despawnQueue.Enqueue(new DespawnJob { go = go, prefabId = pid });
+            if (pid > 0)
+            {
+                _despawnQueue.Enqueue(new DespawnJob { go = go, prefabId = pid });
+            }
         }
 
-        objects.Clear();
-        _spawnedByChunk.Remove(coord);
-        processedChunks.Remove(coord);
-
-        if (!_despawning && _despawnQueue.Count > 0)
+        if (!_despawning)
         {
             StartCoroutine(ProcessDespawnQueue());
         }
@@ -378,22 +246,13 @@ public class ClientPrefabRuntime : MonoBehaviour
         {
             return holder.PrefabId;
         }
-
-        // Fallback to GetComponent if not cached
-        var idHolder = go.GetComponent<PrefabIdHolder>();
-        if (idHolder != null)
-        {
-            _idHolderCache[go] = idHolder; // Cache for future use
-            return idHolder.PrefabId;
-        }
-
         return 0;
     }
 
     private IEnumerator ProcessDespawnQueue()
     {
         _despawning = true;
-        const float maxDespawnTimePerFrameMs = 2f;
+        const float maxDespawnTimePerFrameMs = 1.5f; // Giảm từ 2f xuống 1.5f
         var stopwatch = new System.Diagnostics.Stopwatch();
 
         while (_despawnQueue.Count > 0)
@@ -420,16 +279,12 @@ public class ClientPrefabRuntime : MonoBehaviour
         _despawning = false;
     }
 
-    /// <summary>
-    /// Clean everything - for scene changes
-    /// </summary>
     public void FlushAll()
     {
         StopAllCoroutines();
         _spawning = _despawning = false;
         _poolsInitialized = false;
 
-        // Return all active objects to pools
         foreach (var kvp in _spawnedByChunk)
         {
             var objects = kvp.Value;
@@ -455,7 +310,6 @@ public class ClientPrefabRuntime : MonoBehaviour
 
         Debug.Log("ClientPrefabRuntime flushed completely.");
 
-        // Restart initialization if needed
         if (this && gameObject.activeInHierarchy)
         {
             _initCoroutine = StartCoroutine(InitializeRegistry());
@@ -470,7 +324,6 @@ public class ClientPrefabRuntime : MonoBehaviour
         return new ChunkCoord(cx, cy);
     }
 
-    // ===== Pool Statistics (for debugging) =====
     public void LogPoolStatistics()
     {
         Debug.Log("=== Pool Statistics ===");
@@ -480,20 +333,16 @@ public class ClientPrefabRuntime : MonoBehaviour
             int available = kvp.Value.Count;
             int inUse = 0;
 
-            // Count in-use objects
-            if (_spawnedByChunk.Count > 0)
+            foreach (var chunkObjects in _spawnedByChunk.Values)
             {
-                foreach (var chunkObjects in _spawnedByChunk.Values)
+                foreach (var go in chunkObjects)
                 {
-                    foreach (var go in chunkObjects)
+                    if (go && go.activeInHierarchy)
                     {
-                        if (go && go.activeInHierarchy)
+                        ushort goId = GetCachedPrefabId(go);
+                        if (goId == id)
                         {
-                            ushort goId = GetCachedPrefabId(go);
-                            if (goId == id)
-                            {
-                                inUse++;
-                            }
+                            inUse++;
                         }
                     }
                 }
@@ -505,7 +354,6 @@ public class ClientPrefabRuntime : MonoBehaviour
         }
     }
 
-    // ===== PrefabIdHolder Component =====
     [DisallowMultipleComponent]
     private class PrefabIdHolder : MonoBehaviour
     {
