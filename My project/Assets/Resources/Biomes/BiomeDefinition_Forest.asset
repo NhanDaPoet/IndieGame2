@@ -17,11 +17,11 @@ MonoBehaviour:
   groundVariants: []
   prefabRules:
   - prefabKey: wood
-    targetCountPerChunk: 15
-    minSpacing: 2
-    cluster: 1
-    clusterCountRange: {x: 3, y: 7}
-    clusterRadius: 3
+    targetCountPerChunk: 8
+    minSpacing: 4
+    cluster: 0
+    clusterCountRange: {x: 2, y: 3}
+    clusterRadius: 0
   minElevation: 0
   maxElevation: 1
   minMoisture: 0

@@ -15,7 +15,8 @@ public class PrefabRegistry : ScriptableObject
     public List<Entry> entries = new();
 
     private Dictionary<string, ushort> _keyToId;
-    private Dictionary<ushort, GameObject> _idToPrefab;
+
+    public Dictionary<ushort, GameObject> _idToPrefab;
 
     public void BuildCaches()
     {

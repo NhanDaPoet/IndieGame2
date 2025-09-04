@@ -544,6 +544,7 @@ MonoBehaviour:
   groundTilemap: {fileID: 75096777}
   maxChunksPerFrame: 2
   buildBudgetMs: 3
+  tilesPerBatch: 50
 --- !u!4 &443426876
 Transform:
   m_ObjectHideFlags: 0
@@ -1433,7 +1434,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClientPrefabRuntime
   maxSpawnPerFrame: 5
   maxDespawnPerFrame: 10
-  defaultPrewarmCount: 0
+  maxSpawnTimePerFrameMs: 2
+  poolSizePerPrefab: 70
+  commonPrefabPoolSize: 200
+  commonPrefabKeys:
+  - tree
 --- !u!4 &1527991981
 Transform:
   m_ObjectHideFlags: 0
@@ -1631,6 +1636,11 @@ MonoBehaviour:
     prefabRegistryResource: Registries/PrefabRegistry_Default
     noiseSettingsResource: Registries/NoiseSettings_Default
     biomeRegionSettingsResource: Registries/BiomeRegionSettings_Default
+  preGenRadius: 5
+  dynamicGeneration: 1
+  maxPreGenChunksPerFrame: 1
+  chunkGenTimeBudgetMs: 3
+  playerUpdateInterval: 0.5
 --- !u!4 &1901064125
 Transform:
   m_ObjectHideFlags: 0
