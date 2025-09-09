@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d420a6344755441a204657983be802, type: 3}
   m_Name: NoiseSettings_Default
   m_EditorClassIdentifier: Assembly-CSharp::NoiseSettings
-  elevationScale: 0.008
-  elevationOctaves: 4
+  elevationScale: 0.01
+  elevationOctaves: 3
   elevationPersistence: 0.5
   elevationLacunarity: 2
   elevationOffset: {x: 1000, y: 2000}
-  moistureScale: 0.008
-  moistureOctaves: 4
+  moistureScale: 0.01
+  moistureOctaves: 3
   moisturePersistence: 0.55
   moistureLacunarity: 2
   moistureOffset: {x: 5000, y: 6000}

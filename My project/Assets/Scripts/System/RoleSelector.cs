@@ -8,29 +8,28 @@ public class RoleSelector : MonoBehaviour
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
 
-    [Header("Optional")]
+    [Header("UI Panels")]
     [SerializeField] private GameObject uiPanelToHideOnConnect;
-
+    [SerializeField] private GameObject worldSettingsPanel; 
+    [SerializeField] private GameObject waitingPanel;     
     private void Start()
     {
-        // Thêm sự kiện khi bấm nút
         if (hostButton != null)
             hostButton.onClick.AddListener(StartAsHost);
-
         if (clientButton != null)
             clientButton.onClick.AddListener(StartAsClient);
+        if (worldSettingsPanel) worldSettingsPanel.SetActive(false);
+        if (waitingPanel) waitingPanel.SetActive(false);
     }
 
-    // Bắt đầu với Host
     private void StartAsHost()
     {
-        // Kiểm tra nếu chưa có server đang chạy
         if (!NetworkServer.active && !NetworkClient.isConnected)
         {
-            NetworkManager.singleton.StartHost();  // Khởi tạo server và client cùng lúc
-
+            NetworkManager.singleton.StartHost();
             if (uiPanelToHideOnConnect != null)
                 uiPanelToHideOnConnect.SetActive(false);
+            if (worldSettingsPanel) worldSettingsPanel.SetActive(true);
         }
         else
         {
@@ -38,16 +37,14 @@ public class RoleSelector : MonoBehaviour
         }
     }
 
-    // Bắt đầu với Client
     private void StartAsClient()
     {
-        // Kiểm tra nếu chưa kết nối tới server
         if (!NetworkClient.isConnected)
         {
-            NetworkManager.singleton.StartClient();  // Khởi tạo client
-
+            NetworkManager.singleton.StartClient();
             if (uiPanelToHideOnConnect != null)
                 uiPanelToHideOnConnect.SetActive(false);
+            if (waitingPanel) waitingPanel.SetActive(true);
         }
         else
         {

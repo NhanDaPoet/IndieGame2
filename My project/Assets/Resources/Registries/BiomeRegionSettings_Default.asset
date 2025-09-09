@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BiomeRegionSettings_Default
   m_EditorClassIdentifier: Assembly-CSharp::BiomeRegionSettings
   regionSize: 128
-  centerJitter: 0.35
-  edgeBlend: 4
-  biomePalette: 00000000
+  centerJitter: 0.2
+  edgeBlend: 8
+  biomePalette: 0000000002000000

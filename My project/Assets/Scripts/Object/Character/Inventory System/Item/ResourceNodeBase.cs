@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [RequireComponent(typeof(Collider2D))]
 public abstract class ResourceNodeBase : NetworkBehaviour
 {
@@ -22,41 +23,69 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     [SerializeField] private GameObject hitFxPrefab;
 
     [Header("State (Synced)")]
-    [SyncVar(hook = nameof(OnRemainingChanged))] private int remaining;
-    [SyncVar(hook = nameof(OnStageIndexChanged))] private int stageIndex;
-    [SyncVar(hook = nameof(OnOccupiedChanged))] private bool occupied;
-    [SyncVar] private uint occupierNetId;
+    [SyncVar(hook = nameof(OnRemainingChanged))] public int remaining;
+    [SyncVar(hook = nameof(OnStageIndexChanged))] public int stageIndex;
+    [SyncVar(hook = nameof(OnOccupiedChanged))] public bool occupied;
+    [SyncVar] public uint occupierNetId;
 
     private Dictionary<int, ParticleSystem> stageParticleSystems = new Dictionary<int, ParticleSystem>();
     private readonly HashSet<uint> contributors = new HashSet<uint>();
     private float sharedAccumulatedTime;
     private float lastSoloHitTime;
     protected ItemPoolManager poolManager;
+
     public override void OnStartServer()
     {
         base.OnStartServer();
-        remaining = Mathf.Max(1, definition != null ? definition.maxHealth : 1);
+        if (definition == null)
+        {
+            Debug.LogError($"[{Time.time:F2}] {gameObject.name}: ResourceDefinition is null on server start.");
+            return;
+        }
+        remaining = Mathf.Max(1, definition.maxHealth);
         stageIndex = 0;
         occupied = false;
         occupierNetId = 0;
         poolManager = FindFirstObjectByType<ItemPoolManager>();
+        if (GetComponent<PrefabIdHolder>() == null)
+        {
+            gameObject.AddComponent<PrefabIdHolder>();
+        }
     }
+
     public override void OnStartClient()
     {
         base.OnStartClient();
+        if (definition == null)
+        {
+            Debug.LogError($"[{Time.time:F2}] {gameObject.name}: ResourceDefinition is null on client start.");
+            return;
+        }
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null)
+            {
+                Debug.LogError($"[{Time.time:F2}] {gameObject.name}: SpriteRenderer is missing.");
+            }
+        }
         UpdateVisualStage();
         InitializeParticleSystem();
     }
-    private void InitializeParticleSystem()
+
+    public void InitializeParticleSystem()
     {
         ClearExistingParticleSystems();
-        if (definition == null) return;
+        if (definition == null)
+        {
+            Debug.LogError($"[{Time.time:F2}] {gameObject.name}: Cannot initialize ParticleSystem due to null ResourceDefinition.");
+            return;
+        }
 
         int maxStages = definition.GetMaxStageTransitions();
         for (int i = 0; i < maxStages; i++)
         {
             GameObject effectPrefab = definition.GetStageTransitionEffect(i);
-
             if (effectPrefab != null)
             {
                 GameObject particleGO = Instantiate(effectPrefab, transform);
@@ -65,20 +94,30 @@ public abstract class ResourceNodeBase : NetworkBehaviour
                 {
                     ConfigureParticleSystem(ps);
                     stageParticleSystems[i] = ps;
-                    if (stageTransitionParticleSystem == null) stageTransitionParticleSystem = ps;
+                    if (stageTransitionParticleSystem == null)
+                    {
+                        stageTransitionParticleSystem = ps;
+                    }
                 }
                 else
                 {
+                    Debug.LogWarning($"[{Time.time:F2}] {gameObject.name}: Stage transition effect prefab at index {i} lacks ParticleSystem.");
                     Destroy(particleGO);
                 }
             }
         }
 
-        if (stageParticleSystems.Count == 0 && stageTransitionParticleSystem != null) ConfigureParticleSystem(stageTransitionParticleSystem);
+        if (stageParticleSystems.Count == 0 && stageTransitionParticleSystem != null)
+        {
+            ConfigureParticleSystem(stageTransitionParticleSystem);
+        }
+        else if (stageParticleSystems.Count == 0 && stageTransitionParticleSystem == null)
+        {
+            Debug.LogWarning($"[{Time.time:F2}] {gameObject.name}: No stage transition particle systems available.");
+        }
     }
 
-    // ===================== API server được Player gọi qua Command =====================
-    [Server]
+    [Server]
     public void ServerStartGather(PlayerMovement player)
     {
         if (!NetworkServer.active || definition == null) return;
@@ -105,6 +144,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
             contributors.Add(playerNetId);
         }
     }
+
     [Server]
     public void ServerStopGather(PlayerMovement player)
     {
@@ -125,10 +165,15 @@ public abstract class ResourceNodeBase : NetworkBehaviour
             if (contributors.Count == 0) occupied = false;
         }
     }
+
     [Server]
     public void ServerHit(PlayerMovement player)
     {
-        if (!NetworkServer.active || definition == null) return;
+        if (!NetworkServer.active || definition == null)
+        {
+            Debug.LogWarning($"[{Time.time:F2}] {gameObject.name}: ServerHit failed: NetworkServer not active or ResourceDefinition is null.");
+            return;
+        }
         if (remaining <= 0 || player == null) return;
         if (!ServerValidateDistance(player.transform.position)) return;
         if (!ServerValidateTool(player)) return;
@@ -149,13 +194,11 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         }
         else
         {
-            //contributors.Add(playerNetId);
-            //occupied = contributors.Count > 0;
             return;
         }
     }
-    // ===================== SERVER LOOP =====================
-    [ServerCallback]
+
+    [ServerCallback]
     private void Update()
     {
         if (!NetworkServer.active || definition == null) return;
@@ -173,23 +216,29 @@ public abstract class ResourceNodeBase : NetworkBehaviour
             }
         }
     }
-    // ===================== SERVER INTERNALS =====================
-    [Server]
+
+    [Server]
     private void ServerApplyProgress(int amount, PlayerMovement sourcePlayer)
     {
         if (remaining <= 0) return;
         int previousStageIndex = stageIndex;
         remaining = Mathf.Max(0, remaining - amount);
         UpdateStageByRemaining();
-        if (stageIndex != previousStageIndex && stageIndex > 0) RpcPlayStageTransitionEffect(stageIndex - 1);
+        if (stageIndex != previousStageIndex && stageIndex > 0)
+        {
+            Debug.Log($"[{Time.time:F2}] {gameObject.name}: Stage changed from {previousStageIndex} to {stageIndex}");
+            RpcPlayStageTransitionEffect(stageIndex - 1);
+        }
         if (remaining == 0)
         {
+            Debug.Log($"[{Time.time:F2}] {gameObject.name}: Resource depleted");
             occupied = false;
             occupierNetId = 0;
             contributors.Clear();
             ServerOnDepleted(sourcePlayer);
         }
     }
+
     [Server]
     protected virtual void ServerOnDepleted(PlayerMovement sourcePlayer)
     {
@@ -203,9 +252,20 @@ public abstract class ResourceNodeBase : NetworkBehaviour
             WorldItem.SpawnWorldItem(drop, transform.position, Vector3.zero);
         }
         RpcSetDepletedVisual();
+        var chunkCoord = NetworkWorldManager.Instance.WorldToChunk(transform.position);
+        var prefabIdHolder = GetComponent<PrefabIdHolder>();
+        if (prefabIdHolder != null)
+        {
+            NetworkWorldManager.Instance.OnPrefabDestroyed(chunkCoord, prefabIdHolder.PrefabId);
+        }
+        else
+        {
+            Debug.LogWarning($"[{Time.time:F2}] {gameObject.name}: PrefabIdHolder missing when depleted.");
+        }
+        NetworkServer.Destroy(gameObject);
     }
-    // ===================== VALIDATIONS =====================
-    [Server]
+
+    [Server]
     private bool ServerValidateTool(PlayerMovement player)
     {
         if (definition == null) return false;
@@ -223,6 +283,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
             return false;
         return true;
     }
+
     [Server]
     private bool ServerValidateDistance(Vector3 playerPos)
     {
@@ -230,8 +291,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         return (playerPos - transform.position).sqrMagnitude <= (maxDist * maxDist);
     }
 
-    // ===================== GETTERS / UTILS =====================
-    [Server]
+    [Server]
     private PlayerMovement GetAnyContributorPlayer()
     {
         foreach (var id in contributors)
@@ -242,6 +302,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         }
         return null;
     }
+
     [Server]
     private ItemData GetPlayerTool(PlayerMovement player)
     {
@@ -265,22 +326,25 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         {
             // Spawn stone or ore-related resource
         }
-        // Add more biomes as needed
     }
 
-    // ===================== VISUALS =====================
-    private void OnRemainingChanged(int oldValue, int newValue)
+    private void OnRemainingChanged(int oldValue, int newValue)
     {
-        if (newValue == 0) RpcSetDepletedVisual();
+        if (newValue == 0)
+        {
+            RpcSetDepletedVisual();
+        }
     }
+
     private void OnStageIndexChanged(int oldV, int newV)
     {
         UpdateVisualStage();
     }
+
     private void OnOccupiedChanged(bool oldV, bool newV)
     {
-       
-    }
+    }
+
     private void UpdateStageByRemaining()
     {
         if (definition == null || definition.depletionThresholds == null || definition.depletionThresholds.Length == 0)
@@ -296,14 +360,18 @@ public abstract class ResourceNodeBase : NetworkBehaviour
                 idx = i + 1;
         }
         stageIndex = Mathf.Clamp(
-        idx,
-        0,
-        (definition.depletionSprites != null ? Mathf.Max(0, definition.depletionSprites.Length - 1) : int.MaxValue)
+            idx,
+            0,
+            (definition.depletionSprites != null ? Mathf.Max(0, definition.depletionSprites.Length - 1) : int.MaxValue)
         );
     }
+
     private void UpdateVisualStage()
     {
-        if (spriteRenderer == null || definition == null) return;
+        if (spriteRenderer == null || definition == null)
+        {
+            return;
+        }
         if (definition.depletionSprites != null && definition.depletionSprites.Length > 0)
         {
             int idx = Mathf.Clamp(stageIndex, 0, definition.depletionSprites.Length - 1);
@@ -311,7 +379,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         }
     }
 
-    private void ClearExistingParticleSystems()
+    public void ClearExistingParticleSystems()
     {
         foreach (var kvp in stageParticleSystems)
         {
@@ -328,7 +396,10 @@ public abstract class ResourceNodeBase : NetworkBehaviour
 
     private void ConfigureParticleSystem(ParticleSystem ps)
     {
-        if (ps == null) return;
+        if (ps == null)
+        {
+            return;
+        }
         ps.Stop();
         var main = ps.main;
         main.playOnAwake = false;
@@ -341,7 +412,10 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     [ClientRpc]
     private void RpcSetDepletedVisual()
     {
-        if (spriteRenderer != null && definition != null && definition.depletionSprites != null && definition.depletionSprites.Length > 0) spriteRenderer.sprite = definition.depletionSprites[definition.depletionSprites.Length - 1];
+        if (spriteRenderer != null && definition != null && definition.depletionSprites != null && definition.depletionSprites.Length > 0)
+        {
+            spriteRenderer.sprite = definition.depletionSprites[definition.depletionSprites.Length - 1];
+        }
     }
 
     [ClientRpc]
@@ -351,7 +425,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
     }
 
     [ClientRpc]
-    protected void RpcOnHitFX(Vector2 fromDir)
+    private void RpcOnHitFX(Vector2 fromDir)
     {
         if (spriteRenderer != null)
             StartCoroutine(HitFlash());
@@ -389,7 +463,10 @@ public abstract class ResourceNodeBase : NetworkBehaviour
 
     private IEnumerator HitFlash()
     {
-        if (spriteRenderer == null) yield break;
+        if (spriteRenderer == null)
+        {
+            yield break;
+        }
         Color o = spriteRenderer.color;
         spriteRenderer.color = new Color(o.r + 0.15f, o.g + 0.15f, o.b + 0.15f, o.a);
         yield return new WaitForSeconds(0.06f);
@@ -404,7 +481,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         while (t < hitShakeTime)
         {
             t += Time.deltaTime;
-            float k = (1f - (t / hitShakeTime)); 
+            float k = (1f - (t / hitShakeTime));
             Vector2 offset = tangent * (hitShakeDistance * k) * Mathf.Sin(t * 80f);
             transform.position = basePos + (Vector3)offset;
             yield return null;
@@ -426,8 +503,7 @@ public abstract class ResourceNodeBase : NetworkBehaviour
         ClearExistingParticleSystems();
     }
 
-    // ===================== GIZMOS =====================
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, 2.5f);

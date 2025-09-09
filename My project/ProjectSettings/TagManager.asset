@@ -16,7 +16,7 @@ TagManager:
   - Enemy
   - Effects
   - Player
-  - 
+  - Item
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: Resource
     uniqueID: 893119339
+    locked: 0
+  - name: Item
+    uniqueID: 880734981
     locked: 0
   - name: Player
     uniqueID: 19337531

@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac9bf6e999710948b3d3c66ea192cce, type: 3}
+  m_Name: BiomeDefinition_Desert
+  m_EditorClassIdentifier: Assembly-CSharp::BiomeDefinition
+  biomeType: 2
+  groundTile: {fileID: 11400000, guid: 1589408d464f15d40bc2c2051f3cdbfa, type: 2}
+  groundVariants: []
+  generalBorderTiles: []
+  biomeTransitions:
+  - neighborBiome: 0
+    transitionTiles:
+    - direction: {x: 0, y: 1}
+      tiles:
+      - tile: {fileID: 11400000, guid: bdaf9525a1545bd498a949ec04a57da5, type: 2}
+        weight: 0
+    - direction: {x: 0, y: -1}
+      tiles:
+      - tile: {fileID: 11400000, guid: ea2db4e002fc0a94b9d43acaba1bcca1, type: 2}
+        weight: 0
+    - direction: {x: -1, y: 0}
+      tiles:
+      - tile: {fileID: 11400000, guid: 0e3c93dd52213e34f98e1293e372ad27, type: 2}
+        weight: 0
+    - direction: {x: 1, y: 0}
+      tiles:
+      - tile: {fileID: 11400000, guid: 2e35d34785cc90f42abbda55b59e6038, type: 2}
+        weight: 0
+    cornerTransitionTiles:
+    - cornerDirection: {x: 1, y: 1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 39866e5767f9f984ab1691ce29ce5380, type: 2}
+        weight: 0
+    - cornerDirection: {x: -1, y: 1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 04a1f65fa1d90bf49825943d81941bbf, type: 2}
+        weight: 0
+    - cornerDirection: {x: 1, y: -1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 37eeb28f380f8884781e96375672a204, type: 2}
+        weight: 0
+    - cornerDirection: {x: -1, y: -1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 6faa0bb006e4afb418c79b301d05b75d, type: 2}
+        weight: 0
+  specificBorderTiles: []
+  prefabRules: []
+  borderTileThreshold: 0
+  minElevation: 0
+  maxElevation: 1
+  minMoisture: 0
+  maxMoisture: 0.4

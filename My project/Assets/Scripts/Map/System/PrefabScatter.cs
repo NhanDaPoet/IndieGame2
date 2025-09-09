@@ -37,41 +37,27 @@ public static class PrefabScatter
                 _cachedRandoms[cacheKey] = rand;
             }
         }
-
-        Debug.Log($"Generating spawns for chunk {cd.coord} with seed {seed}");
-
-        // Tạo map mật độ biome trong chunk - optimized
         CalculateBiomeDensity(cd, cs);
-
         if (_biomeDensityDict.Count == 0)
         {
             Debug.LogWarning($"No biomes found in chunk {cd.coord}");
             return new PrefabSpawn[0];
         }
-
-        // Spawn theo từng biome với mật độ được kiểm soát
         foreach (var biomeKv in _biomeDensityDict)
         {
             var biomeType = biomeKv.Key;
             var tileCount = biomeKv.Value;
             var def = biomeSet.Get(biomeType);
-
             if (def?.prefabRules == null) continue;
-
             ProcessBiomeSpawns(def, biomeType, tileCount, cs, cd, registry, rand);
         }
-
-        // Convert to array và clear cache nếu cần
         var result = _spawnList.ToArray();
-
-        Debug.Log($"Total spawns generated for chunk {cd.coord}: {result.Length}");
         return result;
     }
 
     private static void CalculateBiomeDensity(ChunkData cd, int cs)
     {
         _biomeDensityDict.Clear();
-
         for (int lx = 0; lx < cs; lx++)
         {
             for (int ly = 0; ly < cs; ly++)
@@ -93,27 +79,14 @@ public static class PrefabScatter
                 Debug.LogWarning($"Prefab key '{rule.prefabKey}' not found in registry.");
                 continue;
             }
-
-            // Tính số spawn thực tế dựa trên mật độ biome trong chunk
             float density = (float)tileCount / (cs * cs);
             int maxSpawns = Mathf.RoundToInt(rule.targetCountPerChunk * density);
-
-            // Giới hạn spawn tối đa để tránh quá dày
             maxSpawns = Mathf.Min(maxSpawns, tileCount / Mathf.Max(1, rule.minSpacing + 1));
-
             if (maxSpawns <= 0) continue;
-
-            // Get candidates for this biome - with caching
             GetCandidatesForBiome(cd, biomeType, cs);
-
             if (_candidateList.Count == 0) continue;
-
-            // Shuffle candidates for randomness - Fisher-Yates optimized
             ShuffleCandidates(rand);
-
             int spawned = ProcessSpawnRule(rule, pid, maxSpawns, cd, rand, cs, biomeType);
-
-            Debug.Log($"Spawned {spawned}/{maxSpawns} of {rule.prefabKey} in biome {biomeType}");
         }
     }
 

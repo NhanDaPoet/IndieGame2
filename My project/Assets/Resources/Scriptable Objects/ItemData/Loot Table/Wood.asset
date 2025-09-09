@@ -16,8 +16,8 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: f7060e055ffa59e49a94c5e03a3a74b4, type: 2}
     minQuantity: 5
     maxQuantity: 5
-    baseDropChance: 0.418
-    biome: default
+    baseDropChance: 1
+    biome: Default
   - itemData: {fileID: 11400000, guid: 8f22d104506e04d42adb32b22d86d5f2, type: 2}
     minQuantity: 5
     maxQuantity: 5

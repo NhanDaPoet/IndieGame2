@@ -5,39 +5,27 @@ using System.Collections;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float animationSmoothTime = 0.1f;
     [SerializeField] private float remoteMoveThreshold = 0.02f;
-
-    [Header("Attack Settings")]
     [SerializeField] private float attackCooldown = 0.15f;
     [SerializeField] private bool canMoveWhileAttacking = false;
-    [SerializeField] private float attackFallbackDuration = 0.4f; // Match animation duration (4 frames * 0.1s)
-
-    [Header("Components")]
+    [SerializeField] private float attackFallbackDuration = 0.4f;
     private Rigidbody2D rb;
     private Animator animator;
     private PlayerInputActions inputActions;
-
-    [Header("Input & Animation")]
     private Vector2 moveInput;
     private Vector2 lastMoveDirection;
     private Vector2 smoothMoveInput;
     private Vector2 currentVelocity;
     private Vector3 lastRepPosition;
-
-    [Header("Attack State")]
     [SyncVar(hook = nameof(OnIsAttackingChanged))] private bool isAttacking = false;
     private float lastAttackTime = 0f;
-    private bool isHoldingAttack = false; // Track mouse hold state
-
+    private bool isHoldingAttack = false;
     private ResourceInteractor resourceInteractor;
     private PlayerInventory playerInventory;
     private ResourceNodeBase currentGatherNode;
     public Vector2 FacingDirection => lastMoveDirection.magnitude > 0.1f ? lastMoveDirection : Vector2.down;
-
-    // Animation parameters
     private static readonly int MoveX = Animator.StringToHash("MoveX");
     private static readonly int MoveY = Animator.StringToHash("MoveY");
     private static readonly int IsMoving = Animator.StringToHash("IsMoving");
@@ -46,12 +34,12 @@ public class PlayerMovement : NetworkBehaviour
     private static readonly int AttackY = Animator.StringToHash("AttackY");
     private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
     private static readonly int UseConsumableHash = Animator.StringToHash("UseItemConsumable");
-    private static readonly int HeldTypeHash = Animator.StringToHash("HeldType"); // 0=None,1=Weapon,2=Tool,3=Consumable
+    private static readonly int HeldTypeHash = Animator.StringToHash("HeldType");
 
     private enum HeldUseMode { None = 0, Attack = 1, Consume = 2 }
     private HeldUseMode currentUseMode = HeldUseMode.None;
 
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -75,7 +63,6 @@ public class PlayerMovement : NetworkBehaviour
         inputActions.Player.Attack.performed += OnAttackPerformed;
         inputActions.Player.Attack.canceled += OnAttackCancelled;
         PlayerInventory.OnSelectedHotbarSlotChanged += OnHotbarSelectionChanged_LocalOnly;
-
         SetupCameraFollow();
     }
 
@@ -97,12 +84,9 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (isLocalPlayer)
             PlayerInventory.OnSelectedHotbarSlotChanged -= OnHotbarSelectionChanged_LocalOnly;
-
         if (inputActions != null)
             inputActions.Dispose();
     }
-
-    // ====== INPUT ======
 
     private void OnMovePerformed(InputAction.CallbackContext ctx) => moveInput = ctx.ReadValue<Vector2>();
     private void OnMoveCanceled(InputAction.CallbackContext ctx) => moveInput = Vector2.zero;
@@ -111,18 +95,13 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         if (!CanAttackLocal()) return;
-
         if (currentUseMode == HeldUseMode.Consume)
         {
             CmdUseConsumable();
             return;
         }
-
         isHoldingAttack = true;
-        Vector2 mouseWorld = GetMouseWorldPosition();
-        Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
-        CmdPerformAttack(dir);
-        TryStartOrHitNode();
+        TryPerformAttack();
     }
 
     private void OnAttackCancelled(InputAction.CallbackContext ctx)
@@ -137,6 +116,15 @@ public class PlayerMovement : NetworkBehaviour
         CmdEndAttack();
     }
 
+    private void TryPerformAttack()
+    {
+        if (!CanAttackLocal() || currentUseMode == HeldUseMode.Consume) return;
+        Vector2 mouseWorld = GetMouseWorldPosition();
+        Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
+        CmdPerformAttack(dir);
+        TryStartOrHitNode();
+    }
+
     private void TryStartOrHitNode()
     {
         if (resourceInteractor == null) return;
@@ -144,10 +132,8 @@ public class PlayerMovement : NetworkBehaviour
         if (inv == null) return;
         var held = inv.GetSelectedHotbarItem();
         if (held.IsEmpty || held.itemData == null || held.itemData.itemType != ItemType.Tool) return;
-
         var node = resourceInteractor.FindNodeInFront();
         if (node == null) return;
-
         lastMoveDirection = FacingDirection;
         if (node.definition != null)
         {
@@ -163,8 +149,6 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    // ====== HELD MODE FROM HOTBAR ======
-
     private void OnHotbarSelectionChanged_LocalOnly(int slot)
     {
         if (!isLocalPlayer) return;
@@ -175,19 +159,14 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (playerInventory == null)
             playerInventory = GetComponent<PlayerInventory>();
-
         var stack = playerInventory != null ? playerInventory.GetSelectedHotbarItem() : new ItemStack();
         ItemType type = stack.IsEmpty || stack.itemData == null ? ItemType.Material : stack.itemData.itemType;
-
-        // Map sang chế độ dùng
         if (type == ItemType.Consumable)
             currentUseMode = HeldUseMode.Consume;
         else if (type == ItemType.Tool || type == ItemType.Weapon)
             currentUseMode = HeldUseMode.Attack;
         else
             currentUseMode = HeldUseMode.None;
-
-        // Đánh dấu cho Animator
         if (animator != null)
         {
             int heldParam = 0;
@@ -197,8 +176,6 @@ public class PlayerMovement : NetworkBehaviour
             animator.SetInteger(HeldTypeHash, heldParam);
         }
     }
-
-    // ====== ATTACK NETWORK FLOW ======
 
     private Vector2 GetMouseWorldPosition()
     {
@@ -213,7 +190,7 @@ public class PlayerMovement : NetworkBehaviour
     [Command]
     private void CmdPerformAttack(Vector2 attackDirection)
     {
-        if (Time.time < lastAttackTime + attackCooldown || isAttacking) return;
+        if (Time.time < lastAttackTime + attackCooldown) return;
         isAttacking = true;
         lastAttackTime = Time.time;
         Vector2 dir = attackDirection.sqrMagnitude > 0.0001f ? attackDirection.normalized : Vector2.down;
@@ -260,8 +237,6 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    // ====== CONSUMABLE FLOW ======
-
     [Command]
     private void CmdUseConsumable()
     {
@@ -270,7 +245,6 @@ public class PlayerMovement : NetworkBehaviour
         {
             inv.ServerUseSelectedConsumable();
         }
-
         RpcPlayUseConsumableAnimation();
     }
 
@@ -284,12 +258,9 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    // ====== CAMERA ======
-
     private void SetupCameraFollow()
     {
         if (!isLocalPlayer) return;
-
         if (Camera.main != null)
         {
             var cameraFollow = Camera.main.GetComponent<CameraFollow>();
@@ -300,37 +271,37 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    // ====== UPDATE LOOPS ======
-
     void Update()
     {
-        HandleAnimation();
-        if (!isLocalPlayer)
+        if (isLocalPlayer)
         {
-            lastRepPosition = transform.position;
-            return;
+            HandleInput();
+            HandleAnimation();
         }
-
-        // Handle continuous attack while holding mouse
-        if (isHoldingAttack && CanAttackLocal() && currentUseMode != HeldUseMode.Consume)
+        else
         {
-            Vector2 mouseWorld = GetMouseWorldPosition();
-            Vector2 dir = (mouseWorld - (Vector2)transform.position).normalized;
-            CmdPerformAttack(dir);
-            TryStartOrHitNode();
+            HandleAnimation();
+        }
+    }
+
+    private void HandleInput()
+    {
+        if (!isLocalPlayer) return;
+        var attackInput = inputActions.Player.Attack;
+        if (attackInput.IsPressed() && isHoldingAttack && !isAttacking && CanAttackLocal())
+        {
+            TryPerformAttack();
         }
     }
 
     void FixedUpdate()
     {
         if (!isLocalPlayer || rb == null) return;
-
         if (isAttacking && !canMoveWhileAttacking)
         {
             rb.linearVelocity = Vector2.zero;
             return;
         }
-
         Vector2 moveDirection = moveInput.normalized;
         rb.linearVelocity = moveDirection * moveSpeed;
     }
@@ -338,14 +309,11 @@ public class PlayerMovement : NetworkBehaviour
     private void HandleAnimation()
     {
         if (animator == null) return;
-
         bool isMovingAnim;
         Vector2 animDir;
-
         if (isLocalPlayer)
         {
             isMovingAnim = moveInput.magnitude > 0.1f && (!isAttacking || canMoveWhileAttacking);
-
             animDir = isMovingAnim ? moveInput.normalized : lastMoveDirection;
             if (isMovingAnim && !isAttacking)
                 lastMoveDirection = animDir;
@@ -354,31 +322,25 @@ public class PlayerMovement : NetworkBehaviour
         {
             Vector3 delta = transform.position - lastRepPosition;
             isMovingAnim = delta.sqrMagnitude > (remoteMoveThreshold * remoteMoveThreshold);
-
             animDir = isMovingAnim ? ((Vector2)delta).normalized : lastMoveDirection;
             if (isMovingAnim && !isAttacking)
                 lastMoveDirection = animDir;
         }
-
-        smoothMoveInput = Vector2.SmoothDamp(
-            smoothMoveInput,
-            animDir,
-            ref currentVelocity,
-            animationSmoothTime
-        );
-
+        smoothMoveInput = Vector2.SmoothDamp(smoothMoveInput, animDir, ref currentVelocity, animationSmoothTime);
         animator.SetFloat(MoveX, smoothMoveInput.x);
         animator.SetFloat(MoveY, smoothMoveInput.y);
         animator.SetBool(IsMoving, isMovingAnim);
     }
-
-    // ====== ANIMATION EVENTS ======
 
     public void OnAttackAnimationComplete()
     {
         if (isLocalPlayer)
         {
             CmdEndAttack();
+            if (isHoldingAttack && CanAttackLocal())
+            {
+                TryPerformAttack();
+            }
         }
     }
 
@@ -386,9 +348,16 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (isLocalPlayer && currentUseMode == HeldUseMode.Attack)
         {
-            TryStartOrHitNode(); // Trigger node interaction on hit frame
+            var inv = GetComponent<PlayerInventory>();
+            if (inv == null) return;
+            var held = inv.GetSelectedHotbarItem();
+            if (held.IsEmpty || held.itemData == null || held.itemData.itemType != ItemType.Tool) return;
+            var node = resourceInteractor.FindNodeInFront();
+            if (node == null) return;
+            if (node.definition != null && node.definition.gatherMode == GatherMode.Solo)
+            {
+                resourceInteractor.ClientHit(node);
+            }
         }
     }
-
-    // ====== DEBUG GIZMOS ======
 }

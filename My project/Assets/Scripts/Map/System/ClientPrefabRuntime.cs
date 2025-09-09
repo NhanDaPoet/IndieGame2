@@ -2,40 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Mirror;
 
 public class ClientPrefabRuntime : MonoBehaviour
 {
     public static ClientPrefabRuntime Instance { get; private set; }
 
     [Header("Performance Settings")]
-    [Tooltip("Số lượng Activate tối đa mỗi frame")]
-    [SerializeField] private int maxSpawnPerFrame = 3; // Giảm từ 5 xuống 3
-
-    [Tooltip("Số lượng Deactivate tối đa mỗi frame khi unload")]
-    [SerializeField] private int maxDespawnPerFrame = 5; // Giảm từ 10 xuống 5
-
-    [Tooltip("Thời gian tối đa cho spawn mỗi frame (ms)")]
-    [SerializeField] private float maxSpawnTimePerFrameMs = 1.5f; // Giảm từ 2f xuống 1.5f
+    [SerializeField] private int maxSpawnPerFrame = 3;
+    [SerializeField] private int maxDespawnPerFrame = 5;
+    [SerializeField] private float maxSpawnTimePerFrameMs = 1.5f;
 
     [Header("Pool Settings")]
-    [Tooltip("Pool size cho mỗi prefab type")]
-    [SerializeField] private int poolSizePerPrefab = 20; // Giảm từ 30 xuống 20
-
-    [Tooltip("Pool size cho prefabs phổ biến (trees, rocks...)")]
-    [SerializeField] private int commonPrefabPoolSize = 50; // Giảm từ 100 xuống 50
-
-    [Header("Common Prefab Keys")]
-    [Tooltip("Keys của các prefabs phổ biến cần pool size lớn")]
+    [SerializeField] private int poolSizePerPrefab = 20;
+    [SerializeField] private int commonPrefabPoolSize = 50;
+    [SerializeField] private int maxPoolExpansion = 10;
     [SerializeField] private string[] commonPrefabKeys = { "tree", "rock", "bush" };
 
-    private PrefabRegistry _registry;
-    private readonly Dictionary<ushort, Stack<GameObject>> _pool = new();
-    private readonly Dictionary<ushort, Transform> _poolParents = new();
-    private readonly Dictionary<ChunkCoord, List<GameObject>> _spawnedByChunk = new();
-    private readonly HashSet<ChunkCoord> processedChunks = new();
+    [Header("Pool Management")]
+    [SerializeField] private bool enablePoolExpansion = true;
+    [SerializeField] private bool enablePoolShrinking = false;
+    [SerializeField] private float poolShrinkCheckInterval = 30f;
 
-    // Cache để tránh GetComponent calls
-    private readonly Dictionary<GameObject, PrefabIdHolder> _idHolderCache = new();
+    private PrefabRegistry _registry;
+
+    // Enhanced pooling system
+    private readonly Dictionary<ushort, ObjectPool> _pools = new();
+    private readonly Dictionary<ushort, Transform> _poolParents = new();
+    private readonly Dictionary<ChunkCoord, List<PooledObject>> _spawnedByChunk = new();
+    private readonly HashSet<ChunkCoord> processedChunks = new();
+    private readonly Dictionary<GameObject, PooledObject> _pooledObjectCache = new();
+
+    // Pool statistics tracking
+    private readonly Dictionary<ushort, PoolStatistics> _poolStats = new();
 
     private struct SpawnJob
     {
@@ -50,16 +49,262 @@ public class ClientPrefabRuntime : MonoBehaviour
 
     private struct DespawnJob
     {
-        public GameObject go;
+        public PooledObject pooledObject;
         public ushort prefabId;
     }
 
     private readonly Queue<DespawnJob> _despawnQueue = new();
     private bool _despawning;
-
-    // Pool initialization state
     private bool _poolsInitialized = false;
     private Coroutine _initCoroutine;
+    private Coroutine _poolMaintenanceCoroutine;
+
+    // Enhanced pool class
+    private class ObjectPool
+    {
+        private readonly Stack<PooledObject> _available = new();
+        private readonly HashSet<PooledObject> _inUse = new();
+        private readonly GameObject _prefab;
+        public readonly Transform _parent;
+        private readonly ushort _prefabId;
+        private readonly int _initialSize;
+        private readonly int _maxExpansion;
+        private readonly bool _canExpand;
+
+        public int TotalCreated => _available.Count + _inUse.Count;
+        public int Available => _available.Count;
+        public int InUse => _inUse.Count;
+
+        public ObjectPool(GameObject prefab, Transform parent, ushort prefabId, int initialSize, int maxExpansion, bool canExpand)
+        {
+            _prefab = prefab;
+            _parent = parent;
+            _prefabId = prefabId;
+            _initialSize = initialSize;
+            _maxExpansion = maxExpansion;
+            _canExpand = canExpand;
+
+            // Pre-populate pool
+            for (int i = 0; i < initialSize; i++)
+            {
+                CreateNewObject();
+            }
+        }
+
+        private PooledObject CreateNewObject()
+        {
+            GameObject go = Instantiate(_prefab, _parent);
+            go.SetActive(false);
+
+            PooledObject pooledObj = go.GetComponent<PooledObject>();
+            if (pooledObj == null)
+            {
+                pooledObj = go.AddComponent<PooledObject>();
+            }
+            pooledObj.Initialize(_prefabId, this);
+
+            // Setup NetworkIdentity
+            NetworkIdentity ni = go.GetComponent<NetworkIdentity>();
+            if (ni == null)
+            {
+                ni = go.AddComponent<NetworkIdentity>();
+            }
+
+            // Setup ResourceNodeBase if present
+            ResourceNodeBase node = go.GetComponent<ResourceNodeBase>();
+            if (node != null && node.definition != null)
+            {
+                ValidateResourceNodeComponents(go, node);
+            }
+
+            _available.Push(pooledObj);
+            return pooledObj;
+        }
+
+        private void ValidateResourceNodeComponents(GameObject go, ResourceNodeBase node)
+        {
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            if (sr == null)
+            {
+                Debug.LogWarning($"Prefab {_prefab.name} (ID: {_prefabId}) lacks SpriteRenderer.");
+            }
+
+            ParticleSystem ps = go.GetComponent<ParticleSystem>();
+            if (ps == null && node.definition.GetMaxStageTransitions() > 0)
+            {
+                Debug.LogWarning($"Prefab {_prefab.name} (ID: {_prefabId}) lacks ParticleSystem for stage transitions.");
+            }
+        }
+
+        public PooledObject GetObject()
+        {
+            PooledObject obj;
+
+            if (_available.Count > 0)
+            {
+                obj = _available.Pop();
+            }
+            else if (_canExpand && TotalCreated < _initialSize + _maxExpansion)
+            {
+                obj = CreateNewObject();
+                _available.Pop(); // Remove from available since we're about to use it
+            }
+            else
+            {
+                Debug.LogWarning($"Pool for {_prefab.name} is exhausted and cannot expand further!");
+                return null;
+            }
+
+            _inUse.Add(obj);
+            obj.SetInUse(true);
+            return obj;
+        }
+
+        public void ReturnObject(PooledObject obj)
+        {
+            if (_inUse.Remove(obj))
+            {
+                obj.SetInUse(false);
+                obj.Reset();
+                _available.Push(obj);
+            }
+        }
+
+        public void ShrinkPool(int targetSize)
+        {
+            if (!_canExpand) return;
+
+            int toRemove = Mathf.Max(0, _available.Count - targetSize);
+            for (int i = 0; i < toRemove; i++)
+            {
+                if (_available.Count > 0)
+                {
+                    PooledObject obj = _available.Pop();
+                    if (obj != null && obj.gameObject != null)
+                    {
+                        DestroyImmediate(obj.gameObject);
+                    }
+                }
+            }
+        }
+
+        public PoolStatistics GetStatistics()
+        {
+            return new PoolStatistics
+            {
+                prefabId = _prefabId,
+                totalCreated = TotalCreated,
+                available = Available,
+                inUse = InUse,
+                initialSize = _initialSize,
+                maxSize = _initialSize + _maxExpansion
+            };
+        }
+    }
+
+    // Enhanced pooled object class
+    private class PooledObject : MonoBehaviour
+    {
+        public ushort PrefabId { get; private set; }
+        public bool IsInUse { get; private set; }
+
+        private ObjectPool _parentPool;
+        private ResourceNodeBase _resourceNode;
+        private NetworkIdentity _networkIdentity;
+        private SpriteRenderer _spriteRenderer;
+
+        public void Initialize(ushort prefabId, ObjectPool parentPool)
+        {
+            PrefabId = prefabId;
+            _parentPool = parentPool;
+
+            // Cache components
+            _resourceNode = GetComponent<ResourceNodeBase>();
+            _networkIdentity = GetComponent<NetworkIdentity>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        public void SetInUse(bool inUse)
+        {
+            IsInUse = inUse;
+            gameObject.SetActive(inUse);
+        }
+
+        public void Reset()
+        {
+            // Reset ResourceNode state
+            if (_resourceNode != null && _resourceNode.definition != null)
+            {
+                _resourceNode.enabled = false;
+                _resourceNode.ClearExistingParticleSystems();
+
+                if (NetworkServer.active)
+                {
+                    _resourceNode.remaining = _resourceNode.definition.maxHealth;
+                    _resourceNode.stageIndex = 0;
+                    _resourceNode.occupied = false;
+                    _resourceNode.occupierNetId = 0;
+                }
+            }
+
+            // Reset position and parent
+            transform.position = Vector3.zero;
+            transform.SetParent(_parentPool._parent);
+        }
+
+        public void Activate(Vector3 position)
+        {
+            transform.position = position;
+            gameObject.SetActive(true);
+
+            // Setup ResourceNode
+            if (_resourceNode != null && _resourceNode.definition != null)
+            {
+                _resourceNode.enabled = true;
+
+                if (NetworkServer.active)
+                {
+                    _resourceNode.remaining = _resourceNode.definition.maxHealth;
+                    _resourceNode.stageIndex = 0;
+                    _resourceNode.occupied = false;
+                    _resourceNode.occupierNetId = 0;
+                }
+
+                // Set initial sprite
+                if (_spriteRenderer != null && _resourceNode.definition.depletionSprites != null &&
+                    _resourceNode.definition.depletionSprites.Length > 0)
+                {
+                    _spriteRenderer.sprite = _resourceNode.definition.depletionSprites[0];
+                }
+
+                _resourceNode.InitializeParticleSystem();
+            }
+
+            // Handle networking
+            if (_networkIdentity != null && NetworkServer.active)
+            {
+                NetworkServer.Spawn(gameObject);
+            }
+        }
+
+        public void ReturnToPool()
+        {
+            if (_parentPool != null && IsInUse)
+            {
+                _parentPool.ReturnObject(this);
+            }
+        }
+    }
+
+    public struct PoolStatistics
+    {
+        public ushort prefabId;
+        public int totalCreated;
+        public int available;
+        public int inUse;
+        public int initialSize;
+        public int maxSize;
+    }
 
     private void Awake()
     {
@@ -70,74 +315,76 @@ public class ClientPrefabRuntime : MonoBehaviour
     private IEnumerator InitializeRegistry()
     {
         while (NetworkWorldManager.Instance == null || NetworkWorldManager.Instance.Meta == null)
-        {
             yield return null;
-        }
 
         string path = NetworkWorldManager.Instance.Meta.prefabRegistryResource;
         _registry = Resources.Load<PrefabRegistry>(path);
+
         if (_registry == null)
         {
-            Debug.LogError($"Failed to load PrefabRegistry from path: {path}");
+            Debug.LogError("Failed to load PrefabRegistry!");
             yield break;
         }
 
         _registry.BuildCaches();
-        yield return StartCoroutine(InitializeAllPoolsAsync());
+        InitializePools();
         _poolsInitialized = true;
-        Debug.Log("ClientPrefabRuntime initialization complete");
+
+        // Start pool maintenance coroutine
+        if (enablePoolShrinking)
+        {
+            _poolMaintenanceCoroutine = StartCoroutine(PoolMaintenanceRoutine());
+        }
     }
 
-    private IEnumerator InitializeAllPoolsAsync()
+    private void InitializePools()
     {
-        int poolsCreated = 0;
-        const int maxPoolsPerFrame = 2; // Giảm từ 3 xuống 2
-        const float maxTimePerFrameMs = 2f; // Giảm từ 3f xuống 2f
-        var stopwatch = new System.Diagnostics.Stopwatch();
-
-        foreach (var kv in _registry._idToPrefab)
+        foreach (var entry in _registry._idToPrefab)
         {
-            stopwatch.Reset();
-            stopwatch.Start();
-
-            ushort id = kv.Key;
-            var prefab = kv.Value;
+            ushort id = entry.Key;
+            GameObject prefab = entry.Value;
             if (prefab == null) continue;
 
-            int poolSize = commonPrefabKeys.Any(k => prefab.name.Contains(k)) ? commonPrefabPoolSize : poolSizePerPrefab;
-            _pool[id] = new Stack<GameObject>(poolSize);
-            var parent = new GameObject($"Pool_{prefab.name}").transform;
-            parent.SetParent(transform, false);
-            _poolParents[id] = parent;
-
-            for (int i = 0; i < poolSize; i++)
-            {
-                var go = Instantiate(prefab, parent);
-                go.SetActive(false);
-                var idHolder = go.AddComponent<PrefabIdHolder>();
-                idHolder.PrefabId = id;
-                _pool[id].Push(go);
-                _idHolderCache[go] = idHolder;
-
-                if (++poolsCreated % maxPoolsPerFrame == 0 && stopwatch.ElapsedMilliseconds >= maxTimePerFrameMs)
-                {
-                    yield return null;
-                    stopwatch.Reset();
-                    stopwatch.Start();
-                }
-            }
+            CreatePoolForPrefab(id, prefab);
         }
+    }
+
+    private void CreatePoolForPrefab(ushort prefabId, GameObject prefab)
+    {
+        // Determine pool size
+        bool isCommon = commonPrefabKeys.Any(k => prefab.name.ToLower().Contains(k));
+        int poolSize = isCommon ? commonPrefabPoolSize : poolSizePerPrefab;
+
+        // Create pool parent
+        Transform parent = new GameObject($"Pool_{prefab.name}_{prefabId}").transform;
+        parent.SetParent(transform);
+        _poolParents[prefabId] = parent;
+
+        // Create object pool
+        ObjectPool pool = new ObjectPool(
+            prefab,
+            parent,
+            prefabId,
+            poolSize,
+            maxPoolExpansion,
+            enablePoolExpansion
+        );
+
+        _pools[prefabId] = pool;
+        _poolStats[prefabId] = pool.GetStatistics();
     }
 
     public void ApplySpawns(PrefabSpawn[] spawns)
     {
+        if (!_poolsInitialized) return;
+
         foreach (var spawn in spawns)
         {
             _spawnQueue.Enqueue(new SpawnJob
             {
-                chunk = NetworkWorldManager.Instance.WorldToChunk(spawn.cell),
+                chunk = CellToChunk(spawn.cell),
                 prefabId = spawn.prefabId,
-                worldPos = spawn.cell,
+                worldPos = NetworkWorldManager.Instance.grid.CellToWorld(spawn.cell),
                 variant = spawn.variant
             });
         }
@@ -156,28 +403,29 @@ public class ClientPrefabRuntime : MonoBehaviour
         while (_spawnQueue.Count > 0)
         {
             int spawnedThisFrame = 0;
-            stopwatch.Reset();
-            stopwatch.Start();
+            stopwatch.Restart();
 
             while (_spawnQueue.Count > 0 &&
                    spawnedThisFrame < maxSpawnPerFrame &&
                    stopwatch.ElapsedMilliseconds < maxSpawnTimePerFrameMs)
             {
                 var job = _spawnQueue.Dequeue();
-                if (!_registry._idToPrefab.ContainsKey(job.prefabId)) continue;
+                PooledObject pooledObj = GetFromPool(job.prefabId);
 
-                GameObject go = GetFromPool(job.prefabId);
-                if (go == null) continue;
+                if (pooledObj == null) continue;
 
-                go.transform.position = job.worldPos;
-                go.SetActive(true);
+                pooledObj.Activate(job.worldPos);
 
+                // Track spawned objects by chunk
                 if (!_spawnedByChunk.TryGetValue(job.chunk, out var list))
                 {
-                    list = new List<GameObject>(50); // Pre-allocate với dung lượng ban đầu
+                    list = new List<PooledObject>();
                     _spawnedByChunk[job.chunk] = list;
                 }
-                list.Add(go);
+                list.Add(pooledObj);
+
+                // Cache for quick lookup
+                _pooledObjectCache[pooledObj.gameObject] = pooledObj;
 
                 spawnedThisFrame++;
             }
@@ -188,51 +436,51 @@ public class ClientPrefabRuntime : MonoBehaviour
         _spawning = false;
     }
 
-    private GameObject GetFromPool(ushort prefabId)
+    private PooledObject GetFromPool(ushort prefabId)
     {
-        if (_pool.TryGetValue(prefabId, out var stack) && stack.Count > 0)
+        if (!_pools.TryGetValue(prefabId, out ObjectPool pool))
         {
-            return stack.Pop();
+            // Create pool on demand if it doesn't exist
+            GameObject prefab = _registry.GetPrefab(prefabId);
+            if (prefab == null)
+            {
+                Debug.LogError($"No prefab found for ID: {prefabId}");
+                return null;
+            }
+
+            CreatePoolForPrefab(prefabId, prefab);
+            pool = _pools[prefabId];
         }
 
-        if (_registry._idToPrefab.TryGetValue(prefabId, out var prefab) && _poolParents.TryGetValue(prefabId, out var parent))
-        {
-            var go = Instantiate(prefab, parent);
-            var idHolder = go.AddComponent<PrefabIdHolder>();
-            idHolder.PrefabId = prefabId;
-            _idHolderCache[go] = idHolder;
-            return go;
-        }
-
-        return null;
-    }
-
-    private void ReturnToPool(ushort prefabId, GameObject go)
-    {
-        if (!_pool.ContainsKey(prefabId))
-        {
-            Destroy(go);
-            return;
-        }
-
-        go.SetActive(false);
-        go.transform.SetParent(_poolParents[prefabId], false);
-        _pool[prefabId].Push(go);
+        return pool.GetObject();
     }
 
     public void DespawnChunk(ChunkCoord chunk)
     {
-        if (!_spawnedByChunk.TryGetValue(chunk, out var objects)) return;
-
-        foreach (var go in objects)
+        if (!_spawnedByChunk.TryGetValue(chunk, out var objects))
         {
-            if (!go) continue;
-            ushort pid = GetCachedPrefabId(go);
-            if (pid > 0)
+            return;
+        }
+
+        foreach (var pooledObj in objects)
+        {
+            if (pooledObj == null || !pooledObj.IsInUse) continue;
+
+            _despawnQueue.Enqueue(new DespawnJob
             {
-                _despawnQueue.Enqueue(new DespawnJob { go = go, prefabId = pid });
+                pooledObject = pooledObj,
+                prefabId = pooledObj.PrefabId
+            });
+
+            // Remove from cache
+            if (_pooledObjectCache.ContainsKey(pooledObj.gameObject))
+            {
+                _pooledObjectCache.Remove(pooledObj.gameObject);
             }
         }
+
+        objects.Clear();
+        _spawnedByChunk.Remove(chunk);
 
         if (!_despawning)
         {
@@ -240,36 +488,27 @@ public class ClientPrefabRuntime : MonoBehaviour
         }
     }
 
-    private ushort GetCachedPrefabId(GameObject go)
-    {
-        if (_idHolderCache.TryGetValue(go, out var holder))
-        {
-            return holder.PrefabId;
-        }
-        return 0;
-    }
-
     private IEnumerator ProcessDespawnQueue()
     {
         _despawning = true;
-        const float maxDespawnTimePerFrameMs = 1.5f; // Giảm từ 2f xuống 1.5f
         var stopwatch = new System.Diagnostics.Stopwatch();
 
         while (_despawnQueue.Count > 0)
         {
             int despawnedThisFrame = 0;
-            stopwatch.Reset();
-            stopwatch.Start();
+            stopwatch.Restart();
 
             while (_despawnQueue.Count > 0 &&
                    despawnedThisFrame < maxDespawnPerFrame &&
-                   stopwatch.ElapsedMilliseconds < maxDespawnTimePerFrameMs)
+                   stopwatch.ElapsedMilliseconds < maxSpawnTimePerFrameMs)
             {
                 var job = _despawnQueue.Dequeue();
-                if (job.go && job.prefabId > 0)
+
+                if (job.pooledObject != null && job.pooledObject.IsInUse)
                 {
-                    ReturnToPool(job.prefabId, job.go);
+                    job.pooledObject.ReturnToPool();
                 }
+
                 despawnedThisFrame++;
             }
 
@@ -279,24 +518,51 @@ public class ClientPrefabRuntime : MonoBehaviour
         _despawning = false;
     }
 
+    private IEnumerator PoolMaintenanceRoutine()
+    {
+        var wait = new WaitForSeconds(poolShrinkCheckInterval);
+
+        while (true)
+        {
+            yield return wait;
+
+            if (!_poolsInitialized) continue;
+
+            // Update statistics and potentially shrink pools
+            foreach (var kvp in _pools)
+            {
+                ushort prefabId = kvp.Key;
+                ObjectPool pool = kvp.Value;
+
+                _poolStats[prefabId] = pool.GetStatistics();
+
+                // Shrink pool if it has too many unused objects
+                if (enablePoolShrinking && pool.Available > pool.InUse * 2)
+                {
+                    int targetSize = Mathf.Max(poolSizePerPrefab, pool.InUse + 5);
+                    pool.ShrinkPool(targetSize);
+                }
+            }
+        }
+    }
+
     public void FlushAll()
     {
         StopAllCoroutines();
         _spawning = _despawning = false;
         _poolsInitialized = false;
 
+        // Return all spawned objects to pools
         foreach (var kvp in _spawnedByChunk)
         {
             var objects = kvp.Value;
             if (objects == null) continue;
 
-            foreach (var go in objects)
+            foreach (var pooledObj in objects)
             {
-                if (!go) continue;
-                ushort pid = GetCachedPrefabId(go);
-                if (pid > 0)
+                if (pooledObj != null && pooledObj.IsInUse)
                 {
-                    ReturnToPool(pid, go);
+                    pooledObj.ReturnToPool();
                 }
             }
             objects.Clear();
@@ -306,9 +572,7 @@ public class ClientPrefabRuntime : MonoBehaviour
         processedChunks.Clear();
         _spawnQueue.Clear();
         _despawnQueue.Clear();
-        _idHolderCache.Clear();
-
-        Debug.Log("ClientPrefabRuntime flushed completely.");
+        _pooledObjectCache.Clear();
 
         if (this && gameObject.activeInHierarchy)
         {
@@ -327,36 +591,31 @@ public class ClientPrefabRuntime : MonoBehaviour
     public void LogPoolStatistics()
     {
         Debug.Log("=== Pool Statistics ===");
-        foreach (var kvp in _pool)
+        foreach (var kvp in _poolStats)
         {
-            ushort id = kvp.Key;
-            int available = kvp.Value.Count;
-            int inUse = 0;
+            ushort prefabId = kvp.Key;
+            var stats = kvp.Value;
+            var prefab = _registry.GetPrefab(prefabId);
+            string name = prefab ? prefab.name : $"Unknown_{prefabId}";
 
-            foreach (var chunkObjects in _spawnedByChunk.Values)
-            {
-                foreach (var go in chunkObjects)
-                {
-                    if (go && go.activeInHierarchy)
-                    {
-                        ushort goId = GetCachedPrefabId(go);
-                        if (goId == id)
-                        {
-                            inUse++;
-                        }
-                    }
-                }
-            }
-
-            var prefab = _registry.GetPrefab(id);
-            string name = prefab ? prefab.name : $"Unknown_{id}";
-            Debug.Log($"Prefab {name} (ID:{id}) - Available: {available}, In Use: {inUse}");
+            Debug.Log($"Pool {name} (ID:{prefabId}): " +
+                     $"Total: {stats.totalCreated}, " +
+                     $"Available: {stats.available}, " +
+                     $"In Use: {stats.inUse}, " +
+                     $"Utilization: {(stats.inUse / (float)stats.totalCreated * 100):F1}%");
         }
+        Debug.Log("=====================");
     }
 
-    [DisallowMultipleComponent]
-    private class PrefabIdHolder : MonoBehaviour
+    public Dictionary<ushort, PoolStatistics> GetPoolStatistics()
     {
-        public ushort PrefabId;
+        return new Dictionary<ushort, PoolStatistics>(_poolStats);
     }
+
+    // Utility methods for external access
+    public bool IsPoolInitialized => _poolsInitialized;
+    public int GetSpawnQueueCount => _spawnQueue.Count;
+    public int GetDespawnQueueCount => _despawnQueue.Count;
+    public bool IsSpawning => _spawning;
+    public bool IsDespawning => _despawning;
 }

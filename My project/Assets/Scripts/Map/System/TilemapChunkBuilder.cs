@@ -11,6 +11,7 @@ public class TilemapChunkBuilder : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
 
     private Dictionary<BiomeType, BiomeDefinition> _biomeDefs;
+    private HashSet<ChunkCoord> _processedChunks = new();
 
     private struct ChunkBuildJob
     {
@@ -20,32 +21,37 @@ public class TilemapChunkBuilder : MonoBehaviour
 
     private readonly Queue<ChunkBuildJob> _queue = new();
 
-    [SerializeField] private int maxChunksPerFrame = 1; // Giảm từ 2 xuống 1
-    [SerializeField] private float buildBudgetMs = 2f; // Giảm từ 3ms xuống 2ms
-    [SerializeField] private int tilesPerBatch = 50; // Giảm từ 100 xuống 50
+    [SerializeField] private int maxChunksPerFrame = 1;
+    [SerializeField] private float buildBudgetMs = 3f;
+    [SerializeField] private int tilesPerBatch = 100;
 
     private bool _processing;
 
-    // Cache cho tile picking để tránh recalculate
+    // Cache cho tile picking
     private readonly Dictionary<string, TileBase> _tileCache = new();
-
-    // Reusable arrays để tránh allocation
-    private Vector3Int[] _reusablePositions;
-    private TileBase[] _reusableTiles;
 
     private void Awake()
     {
         Instance = this;
-        InitializeReusableArrays();
+        Debug.Log("TilemapChunkBuilder initialized");
     }
 
-    private void InitializeReusableArrays()
+    private void Start()
     {
-        // Pre-allocate arrays với kích thước chunk tối đa
-        int maxChunkSize = 64; // Giả sử chunk size tối đa là 64x64
-        int maxTiles = maxChunkSize * maxChunkSize;
-        _reusablePositions = new Vector3Int[maxTiles];
-        _reusableTiles = new TileBase[maxTiles];
+        // Đảm bảo references được set
+        if (grid == null)
+            grid = FindFirstObjectByType<Grid>();
+        if (groundTilemap == null)
+            groundTilemap = FindFirstObjectByType<Tilemap>();
+
+        if (grid == null || groundTilemap == null)
+        {
+            Debug.LogError($"Missing references! Grid: {grid}, Tilemap: {groundTilemap}");
+        }
+        else
+        {
+            Debug.Log($"TilemapChunkBuilder ready with Grid: {grid.name}, Tilemap: {groundTilemap.name}");
+        }
     }
 
     private void EnsureCache()
@@ -53,8 +59,15 @@ public class TilemapChunkBuilder : MonoBehaviour
         if (_biomeDefs != null) return;
 
         _biomeDefs = new Dictionary<BiomeType, BiomeDefinition>();
-        var set = NetworkWorldManager.Instance?.BiomeSet;
+        var worldManager = NetworkWorldManager.Instance;
 
+        if (worldManager == null)
+        {
+            Debug.LogWarning("NetworkWorldManager.Instance is null");
+            return;
+        }
+
+        var set = worldManager.BiomeSet;
         if (set == null)
         {
             Debug.LogWarning("BiomeSet is null in TilemapChunkBuilder");
@@ -74,19 +87,25 @@ public class TilemapChunkBuilder : MonoBehaviour
 
     public void EnqueueBuild(ChunkCoord coord, byte[] biomeData)
     {
-        EnsureCache();
+        // Check if already processed
+        if (_processedChunks.Contains(coord))
+        {
+            Debug.Log($"Chunk {coord} already processed, skipping");
+            return;
+        }
 
         // Check for duplicates in queue
         foreach (var existingJob in _queue)
         {
             if (existingJob.coord.Equals(coord))
             {
-                Debug.LogWarning($"Chunk {coord} already queued for building");
+                Debug.Log($"Chunk {coord} already queued for building");
                 return;
             }
         }
 
         _queue.Enqueue(new ChunkBuildJob { coord = coord, data = biomeData });
+        Debug.Log($"Enqueued chunk {coord} for building. Queue size: {_queue.Count}");
 
         if (!_processing)
         {
@@ -97,23 +116,28 @@ public class TilemapChunkBuilder : MonoBehaviour
     private IEnumerator ProcessQueue()
     {
         _processing = true;
+        Debug.Log($"Starting to process {_queue.Count} chunks in build queue");
+
         var sw = new System.Diagnostics.Stopwatch();
 
         while (_queue.Count > 0)
         {
             int built = 0;
-            sw.Reset();
-            sw.Start();
+            sw.Restart();
 
             while (_queue.Count > 0 &&
                    built < maxChunksPerFrame &&
                    sw.ElapsedMilliseconds < buildBudgetMs)
             {
                 var job = _queue.Dequeue();
+                Debug.Log($"Building chunk {job.coord}...");
+
                 yield return StartCoroutine(BuildGroundFromBytesCoroutine(job.coord, job.data));
                 built++;
 
-                // Early exit nếu quá thời gian
+                // Mark as processed
+                _processedChunks.Add(job.coord);
+
                 if (sw.ElapsedMilliseconds >= buildBudgetMs)
                 {
                     break;
@@ -124,36 +148,33 @@ public class TilemapChunkBuilder : MonoBehaviour
         }
 
         _processing = false;
+        Debug.Log("Finished processing build queue");
     }
 
     private IEnumerator BuildGroundFromBytesCoroutine(ChunkCoord coord, byte[] data)
     {
         EnsureCache();
-
         var meta = NetworkWorldManager.Instance?.Meta;
         if (meta == null)
         {
-            Debug.LogError("NetworkWorldManager.Meta is null");
             yield break;
         }
-
+        if (grid == null || groundTilemap == null)
+        {
+            yield break;
+        }
         int cs = meta.chunkSize;
         int x0 = coord.x * cs;
         int y0 = coord.y * cs;
-
         if (data == null || data.Length != cs * cs)
         {
-            Debug.LogWarning($"Invalid biome data for chunk {coord}, falling back to generation");
             yield return StartCoroutine(BuildGroundForChunkCoroutine(coord));
             yield break;
         }
-
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
-
-        // Prepare tiles using reusable arrays
-        int tileCount = 0;
-
+        var positions = new List<Vector3Int>();
+        var tiles = new List<TileBase>();
         for (int ly = 0; ly < cs; ly++)
         {
             for (int lx = 0; lx < cs; lx++)
@@ -161,66 +182,63 @@ public class TilemapChunkBuilder : MonoBehaviour
                 int dataIndex = ly * cs + lx;
                 int wx = x0 + lx;
                 int wy = y0 + ly;
-
                 var bt = (BiomeType)data[dataIndex];
-
                 if (_biomeDefs.TryGetValue(bt, out var def) && def != null)
                 {
-                    var tile = GetCachedTile(def, wx, wy, meta.seed);
+                    var tile = GetCachedTileWithBlend(def, wx, wy, meta.seed);
                     if (tile != null)
                     {
-                        _reusablePositions[tileCount] = new Vector3Int(wx, wy, 0);
-                        _reusableTiles[tileCount] = tile;
-                        tileCount++;
+                        positions.Add(new Vector3Int(wx, wy, 0));
+                        tiles.Add(tile);
                     }
                 }
             }
         }
-
-        // Set tiles in batches to spread across frames
-        for (int i = 0; i < tileCount; i += tilesPerBatch)
+        for (int i = 0; i < positions.Count; i += tilesPerBatch)
         {
-            int batchSize = Mathf.Min(tilesPerBatch, tileCount - i);
+            int batchSize = Mathf.Min(tilesPerBatch, positions.Count - i);
             var batchPositions = new Vector3Int[batchSize];
             var batchTiles = new TileBase[batchSize];
-
-            System.Array.Copy(_reusablePositions, i, batchPositions, 0, batchSize);
-            System.Array.Copy(_reusableTiles, i, batchTiles, 0, batchSize);
-
-            groundTilemap.SetTiles(batchPositions, batchTiles);
-            if (stopwatch.ElapsedMilliseconds >= 1f)
+            for (int j = 0; j < batchSize; j++)
             {
-                stopwatch.Reset();
-                stopwatch.Start();
+                batchPositions[j] = positions[i + j];
+                batchTiles[j] = tiles[i + j];
+            }
+            groundTilemap.SetTiles(batchPositions, batchTiles);
+
+            if (stopwatch.ElapsedMilliseconds >= 2f)
+            {
+                stopwatch.Restart();
                 yield return null;
             }
         }
-        Debug.Log($"Built chunk {coord} with {tileCount} tiles in {stopwatch.ElapsedMilliseconds}ms");
+        groundTilemap.RefreshAllTiles();
     }
 
-
-    private TileBase GetCachedTile(BiomeDefinition def, int worldX, int worldY, int seed)
+    private TileBase GetCachedTileWithBlend(BiomeDefinition def, int worldX, int worldY, int seed)
     {
-        // Create cache key
-        string cacheKey = $"{def.biomeType}_{worldX}_{worldY}_{seed}";
+        var worldManager = NetworkWorldManager.Instance;
+        if (worldManager == null) return def.PickGroundTileDeterministic(worldX, worldY, seed);
+
+        var blendData = BiomeService.GetBlendDataForTile(worldX, worldY, seed,
+            worldManager.Noise, worldManager.BiomeRegion, worldManager.BiomeSet);
+
+        string cacheKey = $"{def.biomeType}_{worldX}_{worldY}_{seed}_{blendData.isBorder}";
 
         if (_tileCache.TryGetValue(cacheKey, out var cachedTile))
         {
             return cachedTile;
         }
 
-        // Generate tile và cache
-        var tile = def.PickGroundTileDeterministic(worldX, worldY, seed);
-
-        // Limit cache size để tránh memory leak
-        if (_tileCache.Count > 10000) // Cache tối đa 10k tiles
+        var tile = def.PickGroundTileWithBlend(worldX, worldY, seed, blendData);
+        if (_tileCache.Count > 10000)
         {
             _tileCache.Clear();
         }
-
         _tileCache[cacheKey] = tile;
         return tile;
     }
+
 
     public void BuildGroundForChunk(ChunkCoord coord)
     {
@@ -240,16 +258,24 @@ public class TilemapChunkBuilder : MonoBehaviour
             yield break;
         }
 
+        if (grid == null || groundTilemap == null)
+        {
+            Debug.LogError("Grid or Tilemap is null!");
+            yield break;
+        }
+
         int cs = meta.chunkSize;
         int x0 = coord.x * cs;
         int y0 = coord.y * cs;
 
-        var positions = new List<Vector3Int>(cs * cs);
-        var tiles = new List<TileBase>(cs * cs);
+        var positions = new List<Vector3Int>();
+        var tiles = new List<TileBase>();
 
         var stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         int processedTiles = 0;
+
+        Debug.Log($"Generating chunk {coord} from scratch at world pos ({x0}, {y0})");
 
         for (int lx = 0; lx < cs; lx++)
         {
@@ -266,7 +292,7 @@ public class TilemapChunkBuilder : MonoBehaviour
 
                 if (_biomeDefs.TryGetValue(bt, out var def) && def != null)
                 {
-                    var tile = GetCachedTile(def, wx, wy, meta.seed);
+                    var tile = GetCachedTileWithBlend(def, wx, wy, meta.seed);
                     if (tile != null)
                     {
                         positions.Add(new Vector3Int(wx, wy, 0));
@@ -276,71 +302,71 @@ public class TilemapChunkBuilder : MonoBehaviour
 
                 processedTiles++;
 
-                // Yield every 100 tiles processed để tránh lag
                 if (processedTiles % 100 == 0 && stopwatch.ElapsedMilliseconds >= 2f)
                 {
-                    stopwatch.Reset();
-                    stopwatch.Start();
+                    stopwatch.Restart();
                     yield return null;
                 }
             }
         }
 
-        // Set all tiles at once sau khi tạo xong
-        if (positions.Count > 0)
+        Debug.Log($"Chunk {coord}: Generated {positions.Count} tiles from scratch");
+
+        // Set tiles in batches
+        for (int i = 0; i < positions.Count; i += tilesPerBatch)
         {
-            // Set tiles in batches
-            for (int i = 0; i < positions.Count; i += tilesPerBatch)
+            int batchSize = Mathf.Min(tilesPerBatch, positions.Count - i);
+            var batchPos = new Vector3Int[batchSize];
+            var batchTiles = new TileBase[batchSize];
+
+            for (int j = 0; j < batchSize; j++)
             {
-                int batchSize = Mathf.Min(tilesPerBatch, positions.Count - i);
-                var batchPos = positions.GetRange(i, batchSize).ToArray();
-                var batchTiles = tiles.GetRange(i, batchSize).ToArray();
+                batchPos[j] = positions[i + j];
+                batchTiles[j] = tiles[i + j];
+            }
 
-                groundTilemap.SetTiles(batchPos, batchTiles);
+            groundTilemap.SetTiles(batchPos, batchTiles);
 
-                if (i > 0 && i % (tilesPerBatch * 2) == 0) // Yield mỗi 2 batches
-                {
-                    yield return null;
-                }
+            if (i > 0 && i % (tilesPerBatch * 2) == 0)
+            {
+                yield return null;
             }
         }
+
+        // Refresh tiles để RuleTile tự động chọn sprite dựa trên neighbors
+        groundTilemap.RefreshAllTiles();
+        Debug.Log($"Built chunk {coord} with {positions.Count} tiles");
+        _processedChunks.Add(coord);
     }
 
     public void ClearChunk(ChunkCoord coord)
     {
         var meta = NetworkWorldManager.Instance?.Meta;
-        if (meta == null) return;
+        if (meta == null || groundTilemap == null) return;
 
         int cs = meta.chunkSize;
         int x0 = coord.x * cs;
         int y0 = coord.y * cs;
 
-        // Use reusable arrays for clearing
-        int tileCount = cs * cs;
-        for (int i = 0; i < tileCount; i++)
+        var clearPositions = new Vector3Int[cs * cs];
+        var clearTiles = new TileBase[cs * cs]; // All nulls
+
+        int idx = 0;
+        for (int ly = 0; ly < cs; ly++)
         {
-            int lx = i % cs;
-            int ly = i / cs;
-            _reusablePositions[i] = new Vector3Int(x0 + lx, y0 + ly, 0);
-            _reusableTiles[i] = null;
+            for (int lx = 0; lx < cs; lx++)
+            {
+                clearPositions[idx++] = new Vector3Int(x0 + lx, y0 + ly, 0);
+            }
         }
-
-        // Create properly sized arrays for SetTiles
-        var clearPositions = new Vector3Int[tileCount];
-        var clearTiles = new TileBase[tileCount];
-
-        System.Array.Copy(_reusablePositions, clearPositions, tileCount);
-        // clearTiles is already filled with nulls
 
         groundTilemap.SetTiles(clearPositions, clearTiles);
 
-        // Clear related cache entries
-        string cachePrefix = $"_{coord.x * cs}_";
+        // Clear cache entries for this chunk
         var keysToRemove = new List<string>();
-
         foreach (var key in _tileCache.Keys)
         {
-            if (key.Contains(cachePrefix))
+            if (key.Contains($"_{coord.x * cs}_") || key.Contains($"_{coord.y * cs}_"))
             {
                 keysToRemove.Add(key);
             }
@@ -350,20 +376,35 @@ public class TilemapChunkBuilder : MonoBehaviour
         {
             _tileCache.Remove(key);
         }
+
+        _processedChunks.Remove(coord);
+        Debug.Log($"Cleared chunk {coord}");
     }
 
-    // Cleanup method to call when changing scenes
     public void FlushAll()
     {
         StopAllCoroutines();
         _processing = false;
         _queue.Clear();
         _tileCache.Clear();
+        _processedChunks.Clear();
+        _biomeDefs = null;
         Debug.Log("TilemapChunkBuilder flushed completely.");
     }
 
     private void OnDestroy()
     {
         FlushAll();
+    }
+
+    // Debug methods
+    public void LogStatus()
+    {
+        Debug.Log($"TilemapChunkBuilder Status: " +
+                 $"Queue: {_queue.Count}, " +
+                 $"Processing: {_processing}, " +
+                 $"Processed chunks: {_processedChunks.Count}, " +
+                 $"Biome defs: {_biomeDefs?.Count ?? 0}, " +
+                 $"Tile cache: {_tileCache.Count}");
     }
 }

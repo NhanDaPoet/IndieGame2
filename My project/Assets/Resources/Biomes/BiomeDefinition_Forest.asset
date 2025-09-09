@@ -13,8 +13,46 @@ MonoBehaviour:
   m_Name: BiomeDefinition_Forest
   m_EditorClassIdentifier: Assembly-CSharp::BiomeDefinition
   biomeType: 0
-  groundTile: {fileID: 11400000, guid: 5042e872b4c541d498d55de5e1ed33e2, type: 2}
+  groundTile: {fileID: 11400000, guid: 8d93ea58b99c6c6438889bc3ee81ed11, type: 2}
   groundVariants: []
+  generalBorderTiles: []
+  biomeTransitions:
+  - neighborBiome: 2
+    transitionTiles:
+    - direction: {x: 0, y: 1}
+      tiles:
+      - tile: {fileID: 11400000, guid: bdaf9525a1545bd498a949ec04a57da5, type: 2}
+        weight: 0
+    - direction: {x: 0, y: -1}
+      tiles:
+      - tile: {fileID: 11400000, guid: ea2db4e002fc0a94b9d43acaba1bcca1, type: 2}
+        weight: 0
+    - direction: {x: -1, y: 0}
+      tiles:
+      - tile: {fileID: 11400000, guid: 0e3c93dd52213e34f98e1293e372ad27, type: 2}
+        weight: 0
+    - direction: {x: 1, y: 0}
+      tiles:
+      - tile: {fileID: 11400000, guid: 2e35d34785cc90f42abbda55b59e6038, type: 2}
+        weight: 0
+    cornerTransitionTiles:
+    - cornerDirection: {x: 1, y: 1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 39866e5767f9f984ab1691ce29ce5380, type: 2}
+        weight: 0
+    - cornerDirection: {x: -1, y: 1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 04a1f65fa1d90bf49825943d81941bbf, type: 2}
+        weight: 0
+    - cornerDirection: {x: 1, y: -1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 37eeb28f380f8884781e96375672a204, type: 2}
+        weight: 0
+    - cornerDirection: {x: -1, y: -1}
+      cornerTiles:
+      - tile: {fileID: 11400000, guid: 6faa0bb006e4afb418c79b301d05b75d, type: 2}
+        weight: 0
+  specificBorderTiles: []
   prefabRules:
   - prefabKey: wood
     targetCountPerChunk: 8
@@ -22,7 +60,10 @@ MonoBehaviour:
     cluster: 0
     clusterCountRange: {x: 2, y: 3}
     clusterRadius: 0
+    borderOnly: 0
+    avoidBorder: 0
+  borderTileThreshold: 0.25
   minElevation: 0
   maxElevation: 1
-  minMoisture: 0
+  minMoisture: 0.5
   maxMoisture: 1
