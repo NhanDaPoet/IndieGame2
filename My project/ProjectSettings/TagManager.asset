@@ -45,6 +45,9 @@ TagManager:
   - name: Ground
     uniqueID: 1469575087
     locked: 0
+  - name: Terrain
+    uniqueID: 2412709157
+    locked: 0
   - name: Resource
     uniqueID: 893119339
     locked: 0

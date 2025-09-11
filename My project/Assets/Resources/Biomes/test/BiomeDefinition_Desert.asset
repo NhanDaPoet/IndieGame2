@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac9bf6e999710948b3d3c66ea192cce, type: 3}
   m_Name: BiomeDefinition_Desert
   m_EditorClassIdentifier: Assembly-CSharp::BiomeDefinition
-  biomeType: 2
-  drawWeight: 0
+  biomeType: 3
+  sortingWeight: 50
   baseTile: {fileID: 11400000, guid: 1589408d464f15d40bc2c2051f3cdbfa, type: 2}
-  baseVariants:
-  - tile: {fileID: 11400000, guid: 1589408d464f15d40bc2c2051f3cdbfa, type: 2}
-    weight: 100
+  baseVariants: []
   prefabRules: []
   minElevation: 0
   maxElevation: 1

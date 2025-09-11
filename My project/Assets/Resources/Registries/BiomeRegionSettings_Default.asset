@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f18e439cf102414bb7092fb0b9dfe35, type: 3}
   m_Name: BiomeRegionSettings_Default
   m_EditorClassIdentifier: Assembly-CSharp::BiomeRegionSettings
-  regionSize: 128
-  centerJitter: 0.2
+  regionSize: 64
+  centerJitter: 0.3
   edgeBlend: 8
-  biomePalette: 0000000002000000
+  biomePalette: 010000000300000001000000

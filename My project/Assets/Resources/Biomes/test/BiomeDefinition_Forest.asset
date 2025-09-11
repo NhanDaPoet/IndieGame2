@@ -11,15 +11,21 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aac9bf6e999710948b3d3c66ea192cce, type: 3}
   m_Name: BiomeDefinition_Forest
-  m_EditorClassIdentifier: 
-  biomeType: 0
-  drawWeight: 1
+  m_EditorClassIdentifier: Assembly-CSharp::BiomeDefinition
+  biomeType: 1
+  sortingWeight: 100
   baseTile: {fileID: 11400000, guid: 8d93ea58b99c6c6438889bc3ee81ed11, type: 2}
-  baseVariants:
-  - tile: {fileID: 11400000, guid: 8d93ea58b99c6c6438889bc3ee81ed11, type: 2}
-    weight: 100
-  prefabRules: []
-  minElevation: 0
-  maxElevation: 1
-  minMoisture: 0
+  baseVariants: []
+  prefabRules:
+  - prefabKey: wood
+    targetCountPerChunk: 8
+    minSpacing: 4
+    cluster: 0
+    clusterCountRange: {x: 2, y: 3}
+    clusterRadius: 0
+    borderOnly: 0
+    avoidBorder: 0
+  minElevation: 0.2
+  maxElevation: 0.8
+  minMoisture: 0.4
   maxMoisture: 1

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BiomeSet_Default
   m_EditorClassIdentifier: Assembly-CSharp::BiomeSet
   biomes:
-  - {fileID: 11400000, guid: a46d66c3e7df30e42ab93e721522b2cf, type: 2}
-  - {fileID: 11400000, guid: f5c7fd4c955e6604cbac23f1490013f3, type: 2}
+  - {fileID: 11400000, guid: 9445b19a8a70d8340a9301ed2c61039d, type: 2}
+  - {fileID: 11400000, guid: 285d173dadd937540b10843ceef7de80, type: 2}

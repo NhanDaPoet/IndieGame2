@@ -39,6 +39,7 @@ public class EnemySpawnData
 
 public enum BiomeType
 {
+    None,
     Forest,
     Plains,
     Desert,
